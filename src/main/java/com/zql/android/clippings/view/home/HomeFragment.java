@@ -16,6 +16,8 @@
 
 package com.zql.android.clippings.view.home;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,6 +25,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,6 +78,16 @@ public class HomeFragment extends BaseFragment implements HomeContract.View{
         mHomeRecyclerView.setHasFixedSize(true);
         mHomeRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mHomeRecyclerView.addItemDecoration(new HomeClippingItemDecoration(kGridSpace));
+
+        HomeClippingItemTouchCallback homeClippingItemTouchCallback = new HomeClippingItemTouchCallback(
+                ItemTouchHelper.LEFT|
+                ItemTouchHelper.RIGHT|
+                ItemTouchHelper.DOWN|
+                ItemTouchHelper.UP,
+                ItemTouchHelper.ACTION_STATE_IDLE);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(homeClippingItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(mHomeRecyclerView);
+
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         staggeredGridLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
         mHomeRecyclerView.setLayoutManager(staggeredGridLayoutManager);
@@ -133,6 +146,48 @@ public class HomeFragment extends BaseFragment implements HomeContract.View{
             }
         }
     }
+
+    private class HomeClippingItemTouchCallback extends ItemTouchHelper.SimpleCallback {
+
+        View view ;
+        public HomeClippingItemTouchCallback(int dragDirs, int swipeDirs) {
+            super(dragDirs, swipeDirs);
+        }
+
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            return true;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+
+        }
+
+        @Override
+        public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
+            super.onSelectedChanged(viewHolder, actionState);
+
+            if(actionState == ItemTouchHelper.ACTION_STATE_DRAG){
+                ObjectAnimator objectAnimatorX = ObjectAnimator.ofFloat(viewHolder.itemView, "scaleX", 1.0f, 1.2f);
+                ObjectAnimator objectAnimatorY = ObjectAnimator.ofFloat(viewHolder.itemView, "scaleY", 1.0f, 1.2f);
+                AnimatorSet animatorSet = new AnimatorSet();
+                animatorSet.setDuration(300);
+                animatorSet.playTogether(objectAnimatorX, objectAnimatorY);
+                animatorSet.start();
+                view = viewHolder.itemView;
+            }
+            if(actionState == ItemTouchHelper.ACTION_STATE_IDLE){
+                ObjectAnimator objectAnimatorX = ObjectAnimator.ofFloat(view, "scaleX", 1.2f, 1.0f);
+                ObjectAnimator objectAnimatorY = ObjectAnimator.ofFloat(view, "scaleY", 1.2f, 1.0f);
+                AnimatorSet animatorSet = new AnimatorSet();
+                animatorSet.setDuration(300);
+                animatorSet.playTogether(objectAnimatorX, objectAnimatorY);
+                animatorSet.start();
+            }
+        }
+    }
+
     private class HomeAdapter extends RecyclerView.Adapter<ClippingHolder>{
 
         private List<Clipping> mClippingsList = new ArrayList<>();
