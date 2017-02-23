@@ -15,6 +15,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <provider
+            android:authorities="com.zql.android.clippings.sdk.provider"
+            android:name=".sdk.provider.ClippingsProvider"
+            android:exported="false"
+            android:enabled="true"/>
     </application>
 
 </manifest>
