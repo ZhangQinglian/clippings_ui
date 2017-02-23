@@ -20,9 +20,12 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.zql.android.clippings.ClippingsApplication;
 
 /**
  * @author qinglian.zhang, created on 2017/2/23.
@@ -54,6 +57,14 @@ public abstract  class BaseFragment extends Fragment {
         return mArgs;
     }
 
+    protected View inflate(@LayoutRes int resource, @Nullable ViewGroup root, boolean attachToRoot){
+        LayoutInflater inflater = LayoutInflater.from(ClippingsApplication.own());
+        return inflater.inflate(resource,root,attachToRoot);
+    }
+
+    protected int getDipFromDimension(int value){
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,value,ClippingsApplication.own().getResources().getDisplayMetrics());
+    }
     protected abstract @LayoutRes int getLayoutId();
 
     protected abstract void initView();

@@ -25,6 +25,9 @@ import com.zql.android.clippings.sdk.parser.Clipping;
 import com.zql.android.clippings.sdk.provider.ClippingContract;
 import com.zqlite.android.logly.Logly;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author qinglian.zhang, created on 2017/2/23.
  */
@@ -76,10 +79,13 @@ public class HomePresenter implements HomeContract.Presenter{
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if(data!= null){
             try {
+                List<Clipping> clippings = new ArrayList<>();
                 while (data.moveToNext()){
                     Clipping clipping = Clipping.getInstance(data);
+                    clippings.add(clipping);
                     Logly.d(clipping.toString());
                 }
+                mView.updateClippings(clippings);
             }catch (Exception e){
 
             }finally {

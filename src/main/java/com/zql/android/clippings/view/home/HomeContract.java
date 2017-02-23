@@ -22,6 +22,9 @@ import android.support.v4.app.LoaderManager;
 import com.zql.android.clippings.mvpc.IContract;
 import com.zql.android.clippings.mvpc.IPresenter;
 import com.zql.android.clippings.mvpc.IView;
+import com.zql.android.clippings.sdk.parser.Clipping;
+
+import java.util.List;
 
 /**
  * @author qinglian.zhang, created on 2017/2/23.
@@ -41,5 +44,6 @@ public class HomeContract implements IContract {
 
     public interface View extends IView<Presenter>{
         void showContent();
+        void updateClippings(List<Clipping> clippings);
     }
 }
