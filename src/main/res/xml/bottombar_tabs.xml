@@ -15,7 +15,7 @@
   ~    limitations under the License.
   -->
 
-<tabs >
+<tabs>
     <tab
         id="@+id/tab_all"
         icon="@drawable/ic_tab_home"

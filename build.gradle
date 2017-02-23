@@ -33,4 +33,7 @@ dependencies {
 
     //底部bottom bar
     compile 'com.roughike:bottom-bar:2.1.1'
+
+    //progress-activity
+    compile 'com.github.vlonjatg:progress-activity:v2.0.2'
 }
