@@ -19,11 +19,8 @@ package com.zql.android.clippings.view;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.support.annotation.IdRes;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.transition.Slide;
-import android.view.Gravity;
-import android.view.animation.AnimationUtils;
+import android.view.View;
 
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
@@ -31,8 +28,6 @@ import com.zql.android.clippings.R;
 import com.zql.android.clippings.sdk.parser.Clipping;
 import com.zql.android.clippings.sdk.parser.ClippingsParser;
 import com.zql.android.clippings.sdk.provider.ClippingContract;
-import com.zql.android.clippings.sdk.provider.ClippingsProvider;
-import com.zql.android.clippings.view.home.BaseActivity;
 import com.zql.android.clippings.view.home.HomeContract;
 import com.zql.android.clippings.view.home.HomeFragment;
 import com.zql.android.clippings.view.home.HomePresenter;
@@ -109,4 +104,5 @@ public class MainActivity extends BaseActivity {
             e.printStackTrace();
         }
     }
+
 }

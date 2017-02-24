@@ -19,14 +19,15 @@ package com.zql.android.clippings.view.home;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.TypedValue;
+import android.transition.Fade;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,9 +39,16 @@ import com.zql.android.clippings.R;
 import com.zql.android.clippings.databinding.ListitemClippingBinding;
 import com.zql.android.clippings.sdk.parser.Clipping;
 import com.zql.android.clippings.view.BaseFragment;
+import com.zql.android.clippings.view.details.DetailFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.functions.Consumer;
 
 /**
  * @author qinglian.zhang, created on 2017/2/23.
@@ -61,6 +69,11 @@ public class HomeFragment extends BaseFragment implements HomeContract.View{
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getLoaderManager().initLoader(HomeContract.QUERY_CLIPPINGS_ID,null,mPresenter);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 
     @Override
@@ -215,19 +228,52 @@ public class HomeFragment extends BaseFragment implements HomeContract.View{
         public int getItemCount() {
             return mClippingsList.size();
         }
+
+        public Clipping getItem(int index){
+            return mClippingsList.get(index);
+        }
     }
 
     private class ClippingHolder extends RecyclerView.ViewHolder{
 
         private final ListitemClippingBinding binding;
-        public ClippingHolder(ListitemClippingBinding binding) {
+        public ClippingHolder(final ListitemClippingBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+
         }
 
         public void bind(Object clipping){
             binding.setVariable(BR.clipping,clipping);
             binding.executePendingBindings();
+            ViewCompat.setTransitionName(binding.getRoot(),getAdapterPosition() + "_clipping");
+            Observable.create(new ObservableOnSubscribe<Integer>() {
+                @Override
+                public void subscribe(final ObservableEmitter<Integer> e) throws Exception {
+                    binding.getRoot().setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(!e.isDisposed()){
+                                e.onNext(getAdapterPosition());
+                            }else {
+                                e.onComplete();
+                            }
+                        }
+                    });
+                }
+            }).throttleFirst(1,TimeUnit.SECONDS).subscribe(new Consumer<Integer>() {
+                @Override
+                public void accept(Integer integer) throws Exception {
+                    onClippingClick(integer,binding.getRoot());
+                }
+            });
         }
+
     }
+
+    private void onClippingClick(int index,View view){
+
+    }
+
+
 }

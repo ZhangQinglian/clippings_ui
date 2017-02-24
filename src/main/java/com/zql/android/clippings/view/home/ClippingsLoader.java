@@ -24,6 +24,7 @@ import android.os.Handler;
 import android.support.v4.content.CursorLoader;
 
 import com.zql.android.clippings.sdk.provider.ClippingContract;
+import com.zqlite.android.logly.Logly;
 
 /**
  * @author qinglian.zhang, created on 2017/2/23.

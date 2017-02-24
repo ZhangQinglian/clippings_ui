@@ -14,7 +14,7 @@
  *    limitations under the License.
  ******************************************************************************/
 
-package com.zql.android.clippings.view.home;
+package com.zql.android.clippings.view;
 
 import android.os.Bundle;
 import android.support.annotation.IdRes;

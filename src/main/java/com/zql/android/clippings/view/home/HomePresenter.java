@@ -83,7 +83,7 @@ public class HomePresenter implements HomeContract.Presenter{
                 while (data.moveToNext()){
                     Clipping clipping = Clipping.getInstance(data);
                     clippings.add(clipping);
-                    Logly.d(clipping.toString());
+                    //Logly.d(clipping.toString());
                 }
                 mView.updateClippings(clippings);
             }catch (Exception e){

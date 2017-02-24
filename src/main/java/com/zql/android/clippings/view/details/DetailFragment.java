@@ -14,16 +14,36 @@
  *    limitations under the License.
  ******************************************************************************/
 
-package com.zql.android.clippings.usercase;
+package com.zql.android.clippings.view.details;
 
-import com.zql.android.clippings.mvpc.UseCase;
+import android.os.Bundle;
+
+import com.zql.android.clippings.R;
+import com.zql.android.clippings.view.BaseFragment;
 
 /**
- * @author qinglian.zhang, created on 2017/2/23.
+ * @author qinglian.zhang, created on 2017/2/24.
  */
-public class QueryClippings extends UseCase {
+public class DetailFragment extends BaseFragment {
     @Override
-    protected void executeUseCase(RequestValues requestValues) {
+    protected int getLayoutId() {
+        return R.layout.fragment_detail;
+    }
 
+    @Override
+    protected void initView() {
+
+    }
+
+    @Override
+    protected void initData() {
+
+    }
+
+
+    public static DetailFragment getInstance(Bundle args){
+        DetailFragment detailFragment = new DetailFragment();
+        detailFragment.setArguments(args);
+        return detailFragment;
     }
 }

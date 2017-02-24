@@ -65,6 +65,7 @@ public abstract  class BaseFragment extends Fragment {
     protected int getDipFromDimension(int value){
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,value,ClippingsApplication.own().getResources().getDisplayMetrics());
     }
+
     protected abstract @LayoutRes int getLayoutId();
 
     protected abstract void initView();
