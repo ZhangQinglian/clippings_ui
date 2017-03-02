@@ -6,3 +6,4 @@
 - [RxAndroid](https://github.com/ReactiveX/RxAndroid/wiki)
 - [DataBinding](https://developer.android.com/topic/libraries/data-binding/index.html)
 - [material design](https://material.io/guidelines/components/cards.html)
+- [Runtime Permission](https://github.com/Karumi/Dexter)
