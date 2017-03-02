@@ -33,7 +33,6 @@ import com.zql.android.clippings.ClippingsApplication;
 public abstract  class BaseFragment extends Fragment {
 
 
-    private Bundle mArgs;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -49,18 +48,8 @@ public abstract  class BaseFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mArgs = getArguments();
     }
 
-
-    protected Bundle getArgs(){
-        return mArgs;
-    }
-
-    protected View inflate(@LayoutRes int resource, @Nullable ViewGroup root, boolean attachToRoot){
-        LayoutInflater inflater = LayoutInflater.from(ClippingsApplication.own());
-        return inflater.inflate(resource,root,attachToRoot);
-    }
 
     protected int getDipFromDimension(int value){
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,value,ClippingsApplication.own().getResources().getDisplayMetrics());

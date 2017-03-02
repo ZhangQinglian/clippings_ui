@@ -46,10 +46,21 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected abstract void initData();
 
-    protected void showFragment(@IdRes int container, BaseFragment fragment){
+    protected void addFragment(@IdRes int container, BaseFragment fragment){
+        getSupportFragmentManager().beginTransaction().add(container,fragment).commit();
+    }
+
+    protected void showFragment(BaseFragment fragment){
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        ft.add(container,fragment);
+        ft.show(fragment);
+        ft.commit();
+    }
+
+    protected void hideFragment(BaseFragment fragment){
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.hide(fragment);
         ft.commit();
     }
 

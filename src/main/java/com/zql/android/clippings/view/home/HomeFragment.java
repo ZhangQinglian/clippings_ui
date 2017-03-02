@@ -18,8 +18,8 @@ package com.zql.android.clippings.view.home;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.graphics.Rect;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
@@ -27,7 +27,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.transition.Fade;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +38,9 @@ import com.zql.android.clippings.R;
 import com.zql.android.clippings.databinding.ListitemClippingBinding;
 import com.zql.android.clippings.sdk.parser.Clipping;
 import com.zql.android.clippings.view.BaseFragment;
-import com.zql.android.clippings.view.details.DetailFragment;
+import com.zql.android.clippings.view.details.DetailActivity;
+import com.zql.android.clippings.view.details.DetailContract;
+import com.zqlite.android.logly.Logly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,14 +67,28 @@ public class HomeFragment extends BaseFragment implements HomeContract.View{
     private HomeAdapter mHomeAdapter ;
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getLoaderManager().initLoader(HomeContract.QUERY_CLIPPINGS_ID,null,mPresenter);
+    }
+
+    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getLoaderManager().initLoader(HomeContract.QUERY_CLIPPINGS_ID,null,mPresenter);
+        if(savedInstanceState != null){
+            Logly.d("    "   + savedInstanceState.getString("a"));
+        }
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString("a","a");
     }
 
     @Override
@@ -271,8 +286,11 @@ public class HomeFragment extends BaseFragment implements HomeContract.View{
 
     }
 
-    private void onClippingClick(int index,View view){
 
+    private void onClippingClick(int index,View view){
+        Intent intent = new Intent(ClippingsApplication.own(), DetailActivity.class);
+        intent.putExtra(DetailContract.PICK_CLIPPING_ID,mHomeAdapter.getItem(index).id);
+        getActivity().startActivity(intent);
     }
 
 

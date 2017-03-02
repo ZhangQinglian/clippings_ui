@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~    Copyright 2017-present, Clippings Contributors.
   ~
   ~    Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,13 +13,97 @@
   ~    See the License for the specific language governing permissions and
   ~    limitations under the License.
   -->
+<layout>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
-    <ImageView
+    <data>
+
+        <import type="com.zql.android.clippings.sdk.parser.Clipping" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="clipping"
+            type="Clipping" />
+
+        <variable
+            name="note"
+            type="Clipping" />
+
+    </data>
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@mipmap/ic_launcher"/>
-</LinearLayout>
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@{clipping.title}"
+                android:textColor="@android:color/black"
+                android:textSize="26sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:paddingTop="5dp"
+                android:layout_marginTop="20dp"
+                android:text="@{clipping.author}"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="@{clipping.getLocaleDate()}"
+                android:textColor="@android:color/black"
+                android:textSize="13sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="@{Clipping.getLocationAndType(clipping)}"
+                android:textColor="@android:color/black"
+                android:textSize="13sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:clickable="true"
+                android:foreground="?android:selectableItemBackground"
+                android:paddingBottom="15dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="15dp"
+                android:text="@{clipping.content}"
+                android:textColor="@android:color/black"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:clickable="true"
+                android:foreground="?android:selectableItemBackground"
+                android:paddingBottom="15dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="15dp"
+                android:text="@{Clipping.getNote(note)}"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:visibility="@{note == null?View.GONE : View.VISIBLE}"
+                android:background="@color/colorGray1"/>
+        </LinearLayout>
+    </ScrollView>
+</layout>

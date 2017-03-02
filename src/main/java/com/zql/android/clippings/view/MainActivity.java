@@ -20,7 +20,6 @@ import android.content.ContentResolver;
 import android.database.Cursor;
 import android.support.annotation.IdRes;
 import android.os.Bundle;
-import android.view.View;
 
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
@@ -28,6 +27,7 @@ import com.zql.android.clippings.R;
 import com.zql.android.clippings.sdk.parser.Clipping;
 import com.zql.android.clippings.sdk.parser.ClippingsParser;
 import com.zql.android.clippings.sdk.provider.ClippingContract;
+import com.zql.android.clippings.view.details.DetailFragment;
 import com.zql.android.clippings.view.home.HomeContract;
 import com.zql.android.clippings.view.home.HomeFragment;
 import com.zql.android.clippings.view.home.HomePresenter;
@@ -47,6 +47,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         Logly.setGlobalTag(new Logly.Tag(Logly.FLAG_THREAD_NAME, "Clippings", Logly.DEBUG));
 
+
     }
 
 
@@ -58,16 +59,28 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        mHomeFragment = HomeFragment.getInstance(null);
+        mHomePresenter = new HomePresenter(mHomeFragment);
+
+        addFragment(R.id.main_container,mHomeFragment);
         mBottomBar = (BottomBar) findViewById(R.id.main_bottom_bar);
         mBottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelected(@IdRes int tabId) {
+                switch (tabId){
+                    case R.id.tab_all:
+                        showHome();
+                        break;
+                    case R.id.tab_label:
+                        showLabel();
+                        break;
+                    case R.id.tab_like:
+                        break;
+                }
             }
         });
+        mBottomBar.setDefaultTab(R.id.tab_all);
 
-        mHomeFragment = HomeFragment.getInstance(null);
-        mHomePresenter = new HomePresenter(mHomeFragment);
-        showFragment(R.id.main_container,mHomeFragment);
     }
 
     @Override
@@ -105,4 +118,12 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    private void showHome(){
+        Logly.d("     tab all");
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).show(mHomeFragment).commit();
+    }
+
+    private void showLabel(){
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).hide(mHomeFragment).commit();
+    }
 }
