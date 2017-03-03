@@ -106,6 +106,12 @@
                 android:textSize="20sp"
                 android:visibility="@{note == null?View.GONE : View.VISIBLE}"
                 android:background="@color/colorGray1"/>
+            <com.zql.android.clippings.view.taggroup.TagsGroup
+                android:id="@+id/tags_group"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="40dp">
+            </com.zql.android.clippings.view.taggroup.TagsGroup>
         </LinearLayout>
     </ScrollView>
 </layout>
