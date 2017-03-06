@@ -14,29 +14,43 @@
  *    limitations under the License.
  ******************************************************************************/
 
-package com.zql.android.clippings;
+package com.zql.android.clippings.view.tags;
 
-import android.app.Application;
+import android.os.Bundle;
 
-import com.amitshekhar.DebugDB;
-import com.zqlite.android.logly.Logly;
+import com.zql.android.clippings.R;
+import com.zql.android.clippings.view.BaseFragment;
 
 /**
- * @author qinglian.zhang, created on 2017/2/23.
+ * @author qinglian.zhang, created on 2017/3/6.
  */
-public class ClippingsApplication extends Application {
+public class TagsFragment extends BaseFragment implements TagsContract.View{
 
-    private static ClippingsApplication sInstance;
+    private TagsContract.Presenter mPresenter;
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-        if(sInstance == null) sInstance = this;
-        Logly.d("debug db : " + DebugDB.getAddressLog());
+    protected int getLayoutId() {
+        return R.layout.fragment_tags;
     }
 
-    public static ClippingsApplication own(){
-        return sInstance;
+    @Override
+    protected void initView() {
+
     }
 
+    @Override
+    protected void initData() {
+
+    }
+
+    public static TagsFragment getInstance(Bundle bundle){
+        TagsFragment fragment = new TagsFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    @Override
+    public void setPresenter(TagsContract.Presenter presenter) {
+        mPresenter = presenter;
+    }
 }

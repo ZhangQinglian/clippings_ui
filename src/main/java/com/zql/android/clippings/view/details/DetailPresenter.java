@@ -19,8 +19,11 @@ package com.zql.android.clippings.view.details;
 import com.zql.android.clippings.mvpc.UseCase;
 import com.zql.android.clippings.mvpc.UseCaseHandler;
 import com.zql.android.clippings.sdk.parser.Clipping;
+import com.zql.android.clippings.usecase.AddLabel;
+import com.zql.android.clippings.usecase.DeleteLabel;
 import com.zql.android.clippings.usecase.GetClipping;
 import com.zql.android.clippings.usecase.GetClippingsNote;
+import com.zql.android.clippings.usecase.GetLabel;
 import com.zqlite.android.logly.Logly;
 
 /**
@@ -70,6 +73,54 @@ public class DetailPresenter implements DetailContract.Presenter {
             public void onSuccess(GetClippingsNote.ResponseValue response) {
                 Clipping note = response.getNote();
                 mView.updateNote(note);
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
+    }
+
+    @Override
+    public void addLabel(String md5, String label) {
+        AddLabel addLabel = new AddLabel();
+        UseCaseHandler.getInstance().execute(addLabel, new AddLabel.RequestValues(md5, label), new UseCase.UseCaseCallback<AddLabel.ResponseValue>() {
+            @Override
+            public void onSuccess(AddLabel.ResponseValue response) {
+
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
+    }
+
+    @Override
+    public void loadLabels(String md5) {
+        GetLabel getLabel = new GetLabel();
+        UseCaseHandler.getInstance().execute(getLabel, new GetLabel.RequestValues(md5), new UseCase.UseCaseCallback<GetLabel.ResponseValue>() {
+            @Override
+            public void onSuccess(GetLabel.ResponseValue response) {
+                mView.showLabels(response.getLabels());
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
+    }
+
+    @Override
+    public void deleteLabel(String md5, String label) {
+        DeleteLabel deleteLabel = new DeleteLabel();
+        UseCaseHandler.getInstance().execute(deleteLabel, new DeleteLabel.RequestValues(md5, label), new UseCase.UseCaseCallback<DeleteLabel.ResponseValue>() {
+            @Override
+            public void onSuccess(DeleteLabel.ResponseValue response) {
+
             }
 
             @Override

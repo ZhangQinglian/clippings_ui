@@ -17,26 +17,52 @@
 package com.zql.android.clippings.view.taggroup;
 
 import android.animation.Animator;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.animation.Interpolator;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.Toast;
 
-import com.zqlite.android.logly.Logly;
+import com.zql.android.clippings.ClippingsApplication;
+import com.zql.android.clippings.R;
+import com.zql.android.clippings.sdk.provider.Label;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * @author qinglian.zhang, created on 2017/3/2.
  */
-public class TagsGroup extends ViewGroup implements Tag.TagCallback{
+public class TagsGroup extends ViewGroup implements Tag.TagCallback ,SpecialTag.SpecialTagCallback{
 
 
+    public static final int[] DEFAULT_TAG_COLORS = new int[]{Color.WHITE,Color.BLACK};
+    public static final int[] DEFAULT_SPECAIL_TAG_COLORS = new int[]{Color.WHITE,Color.parseColor("#607D8B")};
+
+    /**
+     * 从TagsGroup移除，并从数据库移除
+     */
+    public static final int TAG_CHANGE_REMOVE = 1;
+    /**
+     * 添加进TagsGroup，并添加进数据库
+     */
+    public static final int TAG_CHANGE_ADD = 2;
+    /**
+     * 在TagsGroup上显示，无需添加数据库，该数据应该是从数据库中取出
+     */
+    public static final int TAG_CHAGE_SHOW = 3;
     private int mChildMargin = 0;
 
     private int mChildHeight = 0;
@@ -45,6 +71,19 @@ public class TagsGroup extends ViewGroup implements Tag.TagCallback{
 
     private Handler mTestHandler = new Handler();
 
+    private SpecialTag mSpecialTag;
+
+    private Set<String> mTagSet = new HashSet<>();
+
+    private TagsGroupCallback mCallback;
+    public interface TagsGroupCallback{
+        /**
+         *
+         * @param tagText
+         * @param status
+         */
+        void onTagChanged(String tagText,int status);
+    }
     public TagsGroup(Context context, AttributeSet attrs) {
         super(context, attrs);
         initDefault();
@@ -59,18 +98,12 @@ public class TagsGroup extends ViewGroup implements Tag.TagCallback{
         getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
-                mTestHandler.postDelayed(new Runnable() {
+                mTestHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        addTag(new Tag(getContext()));
-                        addTag(new Tag(getContext()));
-                        addTag(new Tag(getContext()));
-                        addTag(new Tag(getContext()));
-                        addTag(new Tag(getContext()));
-                        addTag(new Tag(getContext()));
-                        addTag(new Tag(getContext()));
+                        addSpecalTag(new SpecialTag(getContext(),getResources().getString(R.string.add_label)));
                     }
-                },1000);
+                });
                 getViewTreeObserver().removeOnPreDrawListener(this);
                 return true;
             }
@@ -82,9 +115,42 @@ public class TagsGroup extends ViewGroup implements Tag.TagCallback{
      * @param tag {@link Tag}
      */
     public void addTag(Tag tag){
-        addView(tag);
+        if(mTagSet.contains(tag.getTagText())){
+            Toast.makeText(ClippingsApplication.own(),getResources().getString(R.string.label_already_exist),Toast.LENGTH_SHORT).show();
+        }else {
+            addTagText(tag.getTagText(),TAG_CHANGE_ADD);
+            addView(tag);
+        }
     }
 
+    public void showLables(List<Label> labels){
+        if(labels != null){
+            for(int i = 0;i<labels.size();i++){
+                Label label = labels.get(i);
+                addTagText(label.label,TAG_CHAGE_SHOW);
+                addView(new Tag(getContext(),label.label));
+            }
+        }
+    }
+    public void addSpecalTag(SpecialTag tag){
+        addView(tag,0);
+    }
+    public void addCallback(TagsGroupCallback callback){
+        mCallback = callback;
+    }
+    private void addTagText(String text,int status){
+        mTagSet.add(text);
+        if(mCallback != null){
+            mCallback.onTagChanged(text,status);
+        }
+    }
+
+    private void removeTagText(String text,int status){
+        mTagSet.remove(text);
+        if(mCallback != null){
+            mCallback.onTagChanged(text,status);
+        }
+    }
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -105,11 +171,21 @@ public class TagsGroup extends ViewGroup implements Tag.TagCallback{
         }
 
         for(int i = 0;i<childrenCount;i++){
-            Tag tag = (Tag) getChildAt(i);
-            tag.setIndex(i);
-            tag.setCallback(this);
-            tag.measure(childMeasureSpecWidth,childMeasureSpecHeigth);
-            putChildren(tag,width - getPaddingRight() - getPaddingLeft());
+            if(i>0){
+                Tag tag = (Tag) getChildAt(i);
+                tag.setIndex(i);
+                tag.setCallback(this);
+                tag.measure(childMeasureSpecWidth,childMeasureSpecHeigth);
+                putChildren(tag,width - getPaddingRight() - getPaddingLeft());
+            }else {
+                if(getChildAt(i) instanceof SpecialTag){
+                    SpecialTag tag = (SpecialTag) getChildAt(i);
+                    tag.setIndex(i);
+                    tag.setSpecialCallback(this);
+                    tag.measure(childMeasureSpecWidth,childMeasureSpecHeigth);
+                    putChildren(tag,width - getPaddingRight() - getPaddingLeft());
+                }
+            }
         }
 
         setMeasuredDimension(width,(mChildHeight + mChildMargin*2) * mChilds.size()+ getPaddingBottom() + getPaddingTop());
@@ -177,16 +253,32 @@ public class TagsGroup extends ViewGroup implements Tag.TagCallback{
         return (getMeasuredWidth() - width)/2;
     }
 
+
     @Override
-    public void onTagClick(int index) {
-        performExitAnimation((Tag) getChildAt(index));
+    public void onTagClick(int index, int status) {
+        if(status == Tag.STATUS_EDIT){
+            performExitAnimation((Tag) getChildAt(index));
+        }
     }
 
     @Override
-    public void onTagLongClick(int index) {
-
+    public void onTagLongClick(int index, int status) {
+        if(status == Tag.STATUS_NORMAL){
+            changeTagsStatus(Tag.STATUS_EDIT);
+        }else {
+            changeTagsStatus(Tag.STATUS_NORMAL);
+        }
     }
 
+    private void changeTagsStatus(int status){
+        for(int i = 0;i<getChildCount();i++){
+            View view = getChildAt(i);
+            if(view instanceof Tag){
+                Tag tag = (Tag) getChildAt(i);
+                tag.changeStatus(status);
+            }
+        }
+    }
     private void performExitAnimation(final Tag tag){
         tag.setClickable(false);
         tag.animate().alpha(0).setDuration(800).scaleX(0).scaleY(0).setListener(new Animator.AnimatorListener() {
@@ -198,6 +290,7 @@ public class TagsGroup extends ViewGroup implements Tag.TagCallback{
             @Override
             public void onAnimationEnd(Animator animation) {
                 removeView(tag);
+                removeTagText(tag.getTagText(),TAG_CHANGE_REMOVE);
             }
 
             @Override
@@ -210,5 +303,54 @@ public class TagsGroup extends ViewGroup implements Tag.TagCallback{
 
             }
         }).withLayer().start();
+    }
+
+    @Override
+    public void onSpecialTagClick(int status) {
+        if(status == Tag.STATUS_EDIT){
+            changeTagsStatus(Tag.STATUS_NORMAL);
+        }else {
+            final EditText editText = new EditText(ClippingsApplication.own());
+            editText.setSingleLine();
+            editText.setGravity(Gravity.CENTER);
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setMessage(R.string.add_label)
+                   .setView(editText).setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    String tag = editText.getText().toString();
+                    if(tag == null || tag.trim().length() == 0){
+                        //do nothing
+                    }else {
+                        addTag(new Tag(getContext(),tag));
+                    }
+                }
+            }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            })
+                    .setCancelable(false)
+                    .show();
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    showKeyboard(editText);
+                }
+            },200);
+        }
+    }
+
+    private void showKeyboard(EditText editText){
+        if(editText!=null){
+            editText.setFocusable(true);
+            editText.setFocusableInTouchMode(true);
+            editText.requestFocus();
+            InputMethodManager inputManager = (InputMethodManager) editText
+                    .getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.showSoftInput(editText, 0);
+        }
     }
 }

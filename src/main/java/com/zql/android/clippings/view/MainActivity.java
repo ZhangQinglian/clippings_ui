@@ -39,6 +39,7 @@ import com.zql.android.clippings.view.details.DetailFragment;
 import com.zql.android.clippings.view.home.HomeContract;
 import com.zql.android.clippings.view.home.HomeFragment;
 import com.zql.android.clippings.view.home.HomePresenter;
+import com.zql.android.clippings.view.tags.TagsFragment;
 import com.zqlite.android.logly.Logly;
 
 import java.io.File;
@@ -55,6 +56,8 @@ public class MainActivity extends BaseActivity {
     private HomeFragment mHomeFragment;
 
     private HomeContract.Presenter mHomePresenter;
+
+    private TagsFragment mTagsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +118,9 @@ public class MainActivity extends BaseActivity {
     protected void initView() {
         mHomeFragment = HomeFragment.getInstance(null);
         mHomePresenter = new HomePresenter(mHomeFragment);
+        mTagsFragment = TagsFragment.getInstance(null);
 
+        addFragment(R.id.main_container,mTagsFragment);
         addFragment(R.id.main_container, mHomeFragment);
         mBottomBar = (BottomBar) findViewById(R.id.main_bottom_bar);
         mBottomBar.setOnTabSelectListener(new OnTabSelectListener() {
@@ -148,10 +153,10 @@ public class MainActivity extends BaseActivity {
 
     private void showHome() {
         Logly.d("     tab all");
-        getSupportFragmentManager().beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).show(mHomeFragment).commit();
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).show(mHomeFragment).hide(mTagsFragment).commit();
     }
 
     private void showLabel() {
-        getSupportFragmentManager().beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).hide(mHomeFragment).commit();
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).show(mTagsFragment).hide(mHomeFragment).commit();
     }
 }

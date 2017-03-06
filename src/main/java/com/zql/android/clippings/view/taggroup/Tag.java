@@ -18,11 +18,8 @@ package com.zql.android.clippings.view.taggroup;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.Paint;
-import android.graphics.PixelFormat;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
@@ -36,15 +33,20 @@ import android.widget.TextView;
 import com.zql.android.clippings.R;
 import com.zqlite.android.logly.Logly;
 
-import java.util.Random;
 
 /**
  * @author qinglian.zhang, created on 2017/3/2.
  */
 public class Tag extends TextView {
 
-    private int[] mColors = new int[]{Color.WHITE,Color.BLACK};
+    public static final int STATUS_NORMAL = 1;
+    public static final int STATUS_EDIT = 2;
 
+    protected int mStatus = STATUS_NORMAL;
+
+    private int[] mColors ;
+
+    private String mTagText;
     /**
      * 在{@link TagsGroup}中的位置
      */
@@ -53,12 +55,18 @@ public class Tag extends TextView {
     private TagCallback mCallback;
 
     public interface TagCallback{
-        void onTagClick(int index);
-        void onTagLongClick(int index);
+        void onTagClick(int index,int currentStatus);
+        void onTagLongClick(int index,int currentStatus);
     }
-    public Tag(Context context) {
+
+    public Tag(Context context,String text){
+        this(context,text,TagsGroup.DEFAULT_TAG_COLORS);
+    }
+    public Tag(Context context,String text,int[] colors) {
         super(context);
         initDefault();
+        mColors = colors;
+        setTagText(text);
     }
 
     public Tag(Context context, AttributeSet attrs) {
@@ -76,10 +84,36 @@ public class Tag extends TextView {
         mIndex = index;
     }
 
+    public void changeStatus(int status){
+        if(status == mStatus) return;
+        mStatus = status;
+        onStatusChange(mStatus);
+    }
+
+    protected void onStatusChange(int status){
+        if(mStatus == STATUS_EDIT){
+            Drawable drawable = getResources().getDrawable(R.drawable.ic_tag_delete);
+            Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+            Drawable d = new BitmapDrawable(this.getResources(), Bitmap.createScaledBitmap(bitmap, getMeasuredHeight()/3, getMeasuredHeight()/3, true));
+            setCompoundDrawablesWithIntrinsicBounds(null,null, d,null);
+            setCompoundDrawablePadding(getMeasuredHeight()/2);
+        }else {
+            setCompoundDrawablesWithIntrinsicBounds(null,null, null,null);
+        }
+    }
     public void setCallback(TagCallback callback){
         mCallback = callback;
     }
-    private void initDefault(){
+
+    public void setTagText(String text){
+        mTagText = text;
+        setText(mTagText);
+    }
+
+    public String getTagText(){
+        return mTagText;
+    }
+    protected void initDefault(){
         getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
@@ -91,14 +125,9 @@ public class Tag extends TextView {
                 return true;
             }
         });
-
-
     }
 
-
-    private String[] strs = {"呐喊","car","二傻系列","a","钢铁是怎样炼成的","励志"};
     private void _text(){
-        setText(strs[new Random().nextInt(6)]);
         setTextColor(mColors[1]);
         setTextSize(16);
         int[][] state = {
@@ -109,7 +138,7 @@ public class Tag extends TextView {
         setTextColor(new ColorStateList(state,color));
         setClickable(true);
     }
-    private void _bg(){
+    protected void _bg(){
         setClickable(true);
         StateListDrawable bg = new StateListDrawable();
 
@@ -134,14 +163,24 @@ public class Tag extends TextView {
         setPadding(h*2/3,h/6,h*2/3,h/6);
         setGravity(Gravity.CENTER);
     }
-    private void _listener(){
+    protected void _listener(){
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(mCallback != null){
                     Logly.d("  onclick : " + mIndex);
-                    mCallback.onTagClick(mIndex);
+                    mCallback.onTagClick(mIndex,mStatus);
                 }
+            }
+        });
+
+        setOnLongClickListener(new OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if(mCallback != null){
+                    mCallback.onTagLongClick(mIndex,mStatus);
+                }
+                return true;
             }
         });
     }

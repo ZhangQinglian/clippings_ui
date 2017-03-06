@@ -14,40 +14,22 @@
  *    limitations under the License.
  ******************************************************************************/
 
-package com.zql.android.clippings.view.details;
+package com.zql.android.clippings.view.tags;
 
 import com.zql.android.clippings.mvpc.IContract;
 import com.zql.android.clippings.mvpc.IPresenter;
 import com.zql.android.clippings.mvpc.IView;
-import com.zql.android.clippings.sdk.parser.Clipping;
-import com.zql.android.clippings.sdk.provider.Label;
-
-import java.util.List;
 
 /**
- * @author qinglian.zhang, created on 2017/3/1.
+ * @author qinglian.zhang, created on 2017/3/6.
  */
-public class DetailContract implements IContract {
-
-    public static final String PICK_CLIPPING_ID = "pick_clipping_id";
+public class TagsContract implements IContract {
 
     public interface Presenter extends IPresenter{
-        void getClipping(int id);
 
-        void getClippingsNote(Clipping clipping);
-
-        void addLabel(String md5,String label);
-
-        void loadLabels(String md5);
-
-        void deleteLabel(String md5,String label);
     }
 
     public interface View extends IView<Presenter>{
-        void clippingUpdate(Clipping clipping);
 
-        void updateNote(Clipping clipping);
-
-        void showLabels(List<Label> labels);
     }
 }

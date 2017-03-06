@@ -3,4 +3,9 @@
     <string name="bb_tab_home">首页</string>
     <string name="bb_tab_label">标签</string>
     <string name="bb_tab_favourite">喜欢</string>
+    <string name="add_label">添加标签</string>
+    <string name="label_already_exist">该标签已存在</string>
+    <string name="add">添加</string>
+    <string name="cancel">取消</string>
+    <string name="complete">完成</string>
 </resources>

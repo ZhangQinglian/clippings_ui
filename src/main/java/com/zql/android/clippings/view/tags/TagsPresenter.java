@@ -14,29 +14,26 @@
  *    limitations under the License.
  ******************************************************************************/
 
-package com.zql.android.clippings;
-
-import android.app.Application;
-
-import com.amitshekhar.DebugDB;
-import com.zqlite.android.logly.Logly;
+package com.zql.android.clippings.view.tags;
 
 /**
- * @author qinglian.zhang, created on 2017/2/23.
+ * @author qinglian.zhang, created on 2017/3/6.
  */
-public class ClippingsApplication extends Application {
+public class TagsPresenter implements TagsContract.Presenter {
 
-    private static ClippingsApplication sInstance;
+    private TagsContract.View mView;
+
+    public TagsPresenter(TagsContract.View view){
+        mView = view;
+        mView.setPresenter(this);
+    }
+    @Override
+    public void start() {
+
+    }
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-        if(sInstance == null) sInstance = this;
-        Logly.d("debug db : " + DebugDB.getAddressLog());
-    }
+    public void stop() {
 
-    public static ClippingsApplication own(){
-        return sInstance;
     }
-
 }

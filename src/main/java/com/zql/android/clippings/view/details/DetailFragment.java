@@ -16,6 +16,7 @@
 
 package com.zql.android.clippings.view.details;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -27,8 +28,13 @@ import android.view.ViewGroup;
 import com.zql.android.clippings.R;
 import com.zql.android.clippings.databinding.FragmentDetailBinding;
 import com.zql.android.clippings.sdk.parser.Clipping;
+import com.zql.android.clippings.sdk.provider.Label;
+import com.zql.android.clippings.sdk.provider.LabelContract;
 import com.zql.android.clippings.view.BaseFragment;
+import com.zql.android.clippings.view.taggroup.TagsGroup;
 import com.zqlite.android.logly.Logly;
+
+import java.util.List;
 
 /**
  * @author qinglian.zhang, created on 2017/2/24.
@@ -38,6 +44,10 @@ public class DetailFragment extends BaseFragment implements DetailContract.View{
     private DetailContract.Presenter mPresenter;
 
     private FragmentDetailBinding mDetailBinding;
+
+    private TagsGroup mTagsGroup ;
+
+    private Clipping mCurrentClipping ;
 
     public interface DetailFragmentCallback{
         void clippingUpdate(Clipping clipping);
@@ -70,7 +80,19 @@ public class DetailFragment extends BaseFragment implements DetailContract.View{
 
     @Override
     protected void initView() {
-
+        mTagsGroup = (TagsGroup) getView().findViewById(R.id.tags_group);
+        mTagsGroup.addCallback(new TagsGroup.TagsGroupCallback() {
+            @Override
+            public void onTagChanged(String tagText, int status) {
+                Logly.d("     tagText : " + tagText +  "   status : " + status);
+                if(status == TagsGroup.TAG_CHANGE_ADD){
+                    mPresenter.addLabel(mCurrentClipping.md5,tagText);
+                }
+                if(status == TagsGroup.TAG_CHANGE_REMOVE){
+                    mPresenter.deleteLabel(mCurrentClipping.md5,tagText);
+                }
+            }
+        });
     }
 
     @Override
@@ -82,14 +104,22 @@ public class DetailFragment extends BaseFragment implements DetailContract.View{
     public void clippingUpdate(Clipping clipping) {
         ((DetailFragmentCallback)(getActivity())).clippingUpdate(clipping);
         mDetailBinding.setClipping(clipping);
+        mCurrentClipping = clipping;
         if(clipping.type == Clipping.K_CLIPPING_TYPE_LABEL){
             mPresenter.getClippingsNote(clipping);
         }
+        //更新完clipping数据后加载对应label
+        mPresenter.loadLabels(mCurrentClipping.md5);
     }
 
     @Override
     public void updateNote(Clipping clipping) {
         mDetailBinding.setNote(clipping);
+    }
+
+    @Override
+    public void showLabels(List<Label> labels) {
+        mTagsGroup.showLables(labels);
     }
 
     @Override
