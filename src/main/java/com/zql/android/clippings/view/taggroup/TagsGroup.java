@@ -157,6 +157,10 @@ public class TagsGroup extends ViewGroup implements Tag.TagCallback ,SpecialTag.
 
     public void showLables(List<Label> labels){
         if(labels != null){
+            if(mMode == MODE_NORMAL){
+                mTagSet.clear();
+                removeAllViews();
+            }
             for(int i = 0;i<labels.size();i++){
                 Label label = labels.get(i);
                 if(mTagSet.contains(label.label)) continue;
