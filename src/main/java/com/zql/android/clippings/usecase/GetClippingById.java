@@ -17,44 +17,35 @@
 package com.zql.android.clippings.usecase;
 
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 
+import com.android.annotations.NonNull;
 import com.zql.android.clippings.ClippingsApplication;
 import com.zql.android.clippings.mvpc.UseCase;
-import com.zql.android.clippings.sdk.provider.Label;
-import com.zql.android.clippings.sdk.provider.LabelContract;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.zql.android.clippings.sdk.parser.Clipping;
+import com.zql.android.clippings.sdk.provider.ClippingContract;
 
 /**
- * @author qinglian.zhang, created on 2017/3/6.
+ * @author qinglian.zhang, created on 2017/3/1.
  */
-public class GetLabel extends UseCase <GetLabel.RequestValues,GetLabel.ResponseValue>{
+public class GetClippingById extends UseCase<GetClippingById.RequestValues,GetClippingById.ResponseValue>{
 
     @Override
     protected void executeUseCase(RequestValues requestValues) {
+        int clippingId = requestValues.getClippingId();
         ContentResolver resolver = ClippingsApplication.own().getContentResolver();
-        Cursor cursor;
-        if(requestValues.getMd5().trim().length() == 0){
-            cursor = resolver.query(LabelContract.LABEL_URI,LabelContract.LABEL_PROJECTION_ALL,null,null,null);
-        }else {
-            cursor = resolver.query(LabelContract.LABEL_URI,LabelContract.LABEL_PROJECTION_ALL,LabelContract.LABEL_SELECTION_MD5,new String[]{requestValues.getMd5()},null);
-        }
+        Cursor cursor = resolver.query(Uri.withAppendedPath(ClippingContract.CLIPPINGS_URI,String.valueOf(clippingId)),ClippingContract.PROJECTION_CLIPPINGS_ALL,null,null,null);
         if(cursor != null){
             try {
-                List<Label> labels = new ArrayList<>();
-                while (cursor.moveToNext()){
-                    Label label = new Label(cursor);
-                    labels.add(label);
-                }
-                getUseCaseCallback().onSuccess(new ResponseValue(labels));
+                cursor.moveToFirst();
+                Clipping clipping = Clipping.getInstance(cursor);
+                ResponseValue responseValue = new ResponseValue(clipping);
+                getUseCaseCallback().onSuccess(responseValue);
             }catch (Exception e){
-                e.printStackTrace();
                 getUseCaseCallback().onError();
-            }finally {
+            }
+            finally {
                 cursor.close();
             }
         }
@@ -62,28 +53,27 @@ public class GetLabel extends UseCase <GetLabel.RequestValues,GetLabel.ResponseV
     }
 
     public static final class RequestValues implements UseCase.RequestValues{
-        private String md5;
 
+        private int clippingId ;
 
-        public RequestValues(String md5){
-            this.md5 = md5;
+        public RequestValues(@NonNull int clippingId){
+            this.clippingId = clippingId;
         }
 
-        public String getMd5(){
-            return md5;
+        public int getClippingId(){
+            return clippingId;
         }
-
     }
 
     public static final class ResponseValue implements UseCase.ResponseValue{
-        private List<Label> labels;
+        private Clipping clipping;
 
-        public ResponseValue(List<Label> labels){
-            this.labels = labels;
+        public ResponseValue(Clipping clipping){
+            this.clipping = clipping;
         }
 
-        public List<Label> getLabels(){
-            return labels;
+        public Clipping getClipping(){
+            return clipping;
         }
     }
 }

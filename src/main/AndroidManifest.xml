@@ -28,6 +28,9 @@
         <activity android:name=".view.details.DetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"/>
+        <activity android:name=".view.tagfilter.TagFilterActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"/>
         <provider
             android:authorities="com.zql.android.clippings.sdk.provider"
             android:name=".sdk.provider.ClippingsProvider"

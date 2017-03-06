@@ -21,10 +21,9 @@ import com.zql.android.clippings.mvpc.UseCaseHandler;
 import com.zql.android.clippings.sdk.parser.Clipping;
 import com.zql.android.clippings.usecase.AddLabel;
 import com.zql.android.clippings.usecase.DeleteLabel;
-import com.zql.android.clippings.usecase.GetClipping;
+import com.zql.android.clippings.usecase.GetClippingById;
 import com.zql.android.clippings.usecase.GetClippingsNote;
 import com.zql.android.clippings.usecase.GetLabel;
-import com.zqlite.android.logly.Logly;
 
 /**
  * @author qinglian.zhang, created on 2017/3/1.
@@ -50,10 +49,10 @@ public class DetailPresenter implements DetailContract.Presenter {
 
     @Override
     public void getClipping(int id) {
-        GetClipping getClipping = new GetClipping();
-        UseCaseHandler.getInstance().execute(getClipping, new GetClipping.RequestValues(id), new UseCase.UseCaseCallback<GetClipping.ResponseValue>() {
+        GetClippingById getClippingById = new GetClippingById();
+        UseCaseHandler.getInstance().execute(getClippingById, new GetClippingById.RequestValues(id), new UseCase.UseCaseCallback<GetClippingById.ResponseValue>() {
             @Override
-            public void onSuccess(GetClipping.ResponseValue response) {
+            public void onSuccess(GetClippingById.ResponseValue response) {
                 Clipping clipping = response.getClipping();
                 mView.clippingUpdate(clipping);
             }

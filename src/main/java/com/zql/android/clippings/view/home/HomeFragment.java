@@ -42,6 +42,7 @@ import com.zql.android.clippings.sdk.parser.Clipping;
 import com.zql.android.clippings.view.BaseFragment;
 import com.zql.android.clippings.view.details.DetailActivity;
 import com.zql.android.clippings.view.details.DetailContract;
+import com.zql.android.clippings.view.tagfilter.TagFilterActivity;
 import com.zqlite.android.logly.Logly;
 
 import java.util.ArrayList;
@@ -68,10 +69,15 @@ public class HomeFragment extends BaseFragment implements HomeContract.View{
 
     private HomeAdapter mHomeAdapter ;
 
+    private List<String> mMd5s ;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getLoaderManager().initLoader(HomeContract.QUERY_CLIPPINGS_ID,null,mPresenter);
+        Bundle args = getArguments();
+        if(args != null){
+            mMd5s = getArguments().getStringArrayList(TagFilterActivity.FILTER_MD5S);
+        }
     }
 
     @Override
@@ -150,7 +156,19 @@ public class HomeFragment extends BaseFragment implements HomeContract.View{
     @Override
     public void updateClippings(List<Clipping> clippings) {
         if(clippings.size() > 0){
-            mHomeAdapter.update(clippings);
+            if(mMd5s != null){
+                List<Clipping> filterClippings = new ArrayList<>();
+                for(String md5:mMd5s){
+                    for(int i = 0;i<clippings.size();i++){
+                        if(md5.equals(clippings.get(i).md5)){
+                            filterClippings.add(clippings.get(i));
+                        }
+                    }
+                }
+                mHomeAdapter.update(filterClippings);
+            }else {
+                mHomeAdapter.update(clippings);
+            }
             showContent();
         }else {
             hideContent();

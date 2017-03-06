@@ -20,6 +20,7 @@ import android.animation.Animator;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -52,6 +53,15 @@ public class TagsGroup extends ViewGroup implements Tag.TagCallback ,SpecialTag.
     public static final int[] DEFAULT_SPECAIL_TAG_COLORS = new int[]{Color.WHITE,Color.parseColor("#607D8B")};
 
     /**
+     * 编辑模式，可添加可删除
+     */
+    public static final int MODE_EDIT =1;
+    /**
+     * 正常模式，只可点击
+     */
+    public static final int MODE_NORMAL =2;
+
+    /**
      * 从TagsGroup移除，并从数据库移除
      */
     public static final int TAG_CHANGE_REMOVE = 1;
@@ -63,6 +73,7 @@ public class TagsGroup extends ViewGroup implements Tag.TagCallback ,SpecialTag.
      * 在TagsGroup上显示，无需添加数据库，该数据应该是从数据库中取出
      */
     public static final int TAG_CHAGE_SHOW = 3;
+
     private int mChildMargin = 0;
 
     private int mChildHeight = 0;
@@ -76,6 +87,8 @@ public class TagsGroup extends ViewGroup implements Tag.TagCallback ,SpecialTag.
     private Set<String> mTagSet = new HashSet<>();
 
     private TagsGroupCallback mCallback;
+
+    private int mMode = MODE_NORMAL;
     public interface TagsGroupCallback{
         /**
          *
@@ -83,25 +96,44 @@ public class TagsGroup extends ViewGroup implements Tag.TagCallback ,SpecialTag.
          * @param status
          */
         void onTagChanged(String tagText,int status);
+
+        /**
+         *
+         * @param index
+         * @param label
+         */
+        void onTagClick(int index,String label);
     }
     public TagsGroup(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initDefault();
+        initDefault(attrs);
     }
 
     public TagsGroup(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initDefault();
+        initDefault(attrs);
     }
 
-    private void initDefault(){
+    private void initDefault( AttributeSet attrs){
+        if(attrs != null){
+            TypedArray typedArray = getContext().obtainStyledAttributes(attrs,new int[]{R.attr.tag_mode});
+            int mode = typedArray.getInt(0,-1);
+            if(mode == MODE_EDIT){
+                mMode = MODE_EDIT;
+            }else {
+                mMode = MODE_NORMAL;
+            }
+            typedArray.recycle();
+        }
         getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
                 mTestHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        addSpecalTag(new SpecialTag(getContext(),getResources().getString(R.string.add_label)));
+                        if(mMode == MODE_EDIT){
+                            addSpecalTag(new SpecialTag(getContext(),getResources().getString(R.string.add_label)));
+                        }
                     }
                 });
                 getViewTreeObserver().removeOnPreDrawListener(this);
@@ -127,6 +159,7 @@ public class TagsGroup extends ViewGroup implements Tag.TagCallback ,SpecialTag.
         if(labels != null){
             for(int i = 0;i<labels.size();i++){
                 Label label = labels.get(i);
+                if(mTagSet.contains(label.label)) continue;
                 addTagText(label.label,TAG_CHAGE_SHOW);
                 addView(new Tag(getContext(),label.label));
             }
@@ -182,6 +215,12 @@ public class TagsGroup extends ViewGroup implements Tag.TagCallback ,SpecialTag.
                     SpecialTag tag = (SpecialTag) getChildAt(i);
                     tag.setIndex(i);
                     tag.setSpecialCallback(this);
+                    tag.measure(childMeasureSpecWidth,childMeasureSpecHeigth);
+                    putChildren(tag,width - getPaddingRight() - getPaddingLeft());
+                }else {
+                    Tag tag = (Tag) getChildAt(i);
+                    tag.setIndex(i);
+                    tag.setCallback(this);
                     tag.measure(childMeasureSpecWidth,childMeasureSpecHeigth);
                     putChildren(tag,width - getPaddingRight() - getPaddingLeft());
                 }
@@ -255,18 +294,30 @@ public class TagsGroup extends ViewGroup implements Tag.TagCallback ,SpecialTag.
 
 
     @Override
-    public void onTagClick(int index, int status) {
-        if(status == Tag.STATUS_EDIT){
-            performExitAnimation((Tag) getChildAt(index));
+    public void onTagClick(int index, int status,String label) {
+        if(mMode == MODE_EDIT){
+            if(status == Tag.STATUS_EDIT){
+                performExitAnimation((Tag) getChildAt(index));
+            }
+        }else {
+            if(status == Tag.STATUS_NORMAL){
+                if(mCallback != null){
+                    mCallback.onTagClick(index,label);
+                }
+            }
         }
     }
 
     @Override
     public void onTagLongClick(int index, int status) {
-        if(status == Tag.STATUS_NORMAL){
-            changeTagsStatus(Tag.STATUS_EDIT);
+        if(mMode == MODE_EDIT){
+            if(status == Tag.STATUS_NORMAL){
+                changeTagsStatus(Tag.STATUS_EDIT);
+            }else {
+                changeTagsStatus(Tag.STATUS_NORMAL);
+            }
         }else {
-            changeTagsStatus(Tag.STATUS_NORMAL);
+
         }
     }
 

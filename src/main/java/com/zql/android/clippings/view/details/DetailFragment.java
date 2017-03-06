@@ -92,6 +92,11 @@ public class DetailFragment extends BaseFragment implements DetailContract.View{
                     mPresenter.deleteLabel(mCurrentClipping.md5,tagText);
                 }
             }
+
+            @Override
+            public void onTagClick(int index, String label) {
+
+            }
         });
     }
 

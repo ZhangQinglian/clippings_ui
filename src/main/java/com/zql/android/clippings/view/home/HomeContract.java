@@ -40,6 +40,7 @@ public class HomeContract implements IContract {
         void showContent();
 
         void loadClippings();
+
     }
 
     public interface View extends IView<Presenter>{

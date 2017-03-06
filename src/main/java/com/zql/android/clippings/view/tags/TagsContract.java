@@ -19,6 +19,9 @@ package com.zql.android.clippings.view.tags;
 import com.zql.android.clippings.mvpc.IContract;
 import com.zql.android.clippings.mvpc.IPresenter;
 import com.zql.android.clippings.mvpc.IView;
+import com.zql.android.clippings.sdk.provider.Label;
+
+import java.util.List;
 
 /**
  * @author qinglian.zhang, created on 2017/3/6.
@@ -26,10 +29,15 @@ import com.zql.android.clippings.mvpc.IView;
 public class TagsContract implements IContract {
 
     public interface Presenter extends IPresenter{
+        void getAllLabels();
+
+        void loadMd5(String label);
+
 
     }
 
     public interface View extends IView<Presenter>{
-
+        void showLabels(List<Label> labels);
+        void loadMd5Finish(List<String> md5s,String label);
     }
 }

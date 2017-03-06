@@ -55,7 +55,7 @@ public class Tag extends TextView {
     private TagCallback mCallback;
 
     public interface TagCallback{
-        void onTagClick(int index,int currentStatus);
+        void onTagClick(int index,int currentStatus,String label);
         void onTagLongClick(int index,int currentStatus);
     }
 
@@ -169,7 +169,7 @@ public class Tag extends TextView {
             public void onClick(View v) {
                 if(mCallback != null){
                     Logly.d("  onclick : " + mIndex);
-                    mCallback.onTagClick(mIndex,mStatus);
+                    mCallback.onTagClick(mIndex,mStatus,mTagText);
                 }
             }
         });

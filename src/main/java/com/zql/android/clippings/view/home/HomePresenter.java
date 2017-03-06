@@ -23,7 +23,6 @@ import android.support.v4.content.Loader;
 import com.zql.android.clippings.ClippingsApplication;
 import com.zql.android.clippings.sdk.parser.Clipping;
 import com.zql.android.clippings.sdk.provider.ClippingContract;
-import com.zqlite.android.logly.Logly;
 
 import java.util.ArrayList;
 import java.util.List;

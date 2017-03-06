@@ -39,7 +39,9 @@ import com.zql.android.clippings.view.details.DetailFragment;
 import com.zql.android.clippings.view.home.HomeContract;
 import com.zql.android.clippings.view.home.HomeFragment;
 import com.zql.android.clippings.view.home.HomePresenter;
+import com.zql.android.clippings.view.tags.TagsContract;
 import com.zql.android.clippings.view.tags.TagsFragment;
+import com.zql.android.clippings.view.tags.TagsPresenter;
 import com.zqlite.android.logly.Logly;
 
 import java.io.File;
@@ -58,6 +60,8 @@ public class MainActivity extends BaseActivity {
     private HomeContract.Presenter mHomePresenter;
 
     private TagsFragment mTagsFragment;
+
+    private TagsContract.Presenter mTagsPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,9 +123,9 @@ public class MainActivity extends BaseActivity {
         mHomeFragment = HomeFragment.getInstance(null);
         mHomePresenter = new HomePresenter(mHomeFragment);
         mTagsFragment = TagsFragment.getInstance(null);
+        mTagsPresenter = new TagsPresenter(mTagsFragment);
 
-        addFragment(R.id.main_container,mTagsFragment);
-        addFragment(R.id.main_container, mHomeFragment);
+
         mBottomBar = (BottomBar) findViewById(R.id.main_bottom_bar);
         mBottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
@@ -153,10 +157,10 @@ public class MainActivity extends BaseActivity {
 
     private void showHome() {
         Logly.d("     tab all");
-        getSupportFragmentManager().beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).show(mHomeFragment).hide(mTagsFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_container,mHomeFragment).commit();
     }
 
     private void showLabel() {
-        getSupportFragmentManager().beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out).show(mTagsFragment).hide(mHomeFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_container,mTagsFragment).commit();
     }
 }

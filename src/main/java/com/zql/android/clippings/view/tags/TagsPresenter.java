@@ -16,6 +16,14 @@
 
 package com.zql.android.clippings.view.tags;
 
+import com.zql.android.clippings.mvpc.UseCase;
+import com.zql.android.clippings.mvpc.UseCaseHandler;
+import com.zql.android.clippings.usecase.GetLabel;
+import com.zql.android.clippings.usecase.GetMD5;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author qinglian.zhang, created on 2017/3/6.
  */
@@ -35,5 +43,41 @@ public class TagsPresenter implements TagsContract.Presenter {
     @Override
     public void stop() {
 
+    }
+
+    @Override
+    public void getAllLabels() {
+        GetLabel getLabel = new GetLabel();
+        UseCaseHandler.getInstance().execute(getLabel, new GetLabel.RequestValues(""), new UseCase.UseCaseCallback<GetLabel.ResponseValue>() {
+            @Override
+            public void onSuccess(GetLabel.ResponseValue response) {
+                mView.showLabels(response.getLabels());
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
+    }
+
+    @Override
+    public void loadMd5(final String label) {
+        GetMD5 getMD5 = new GetMD5();
+        UseCaseHandler.getInstance().execute(getMD5, new GetMD5.RequestValues(label), new UseCase.UseCaseCallback<GetMD5.ResponseValue>() {
+            @Override
+            public void onSuccess(GetMD5.ResponseValue response) {
+                List<String> md5 = new ArrayList<String>();
+                for(int i = 0;i<response.getLabels().size();i++){
+                    md5.add(response.getLabels().get(i).md5);
+                }
+                mView.loadMd5Finish(md5,label);
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
     }
 }

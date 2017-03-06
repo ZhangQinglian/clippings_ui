@@ -16,19 +16,8 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <com.vlonjatg.progressactivity.ProgressLinearLayout
-        android:id="@+id/progress_linear_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <com.zql.android.clippings.view.taggroup.TagsGroup
-            android:id="@+id/tags_group"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="40dp"
-            app:tag_mode="normal"/>
-    </com.vlonjatg.progressactivity.ProgressLinearLayout>
 
+    android:layout_height="match_parent"
+    android:id="@+id/tag_filter_container">
 </LinearLayout>
