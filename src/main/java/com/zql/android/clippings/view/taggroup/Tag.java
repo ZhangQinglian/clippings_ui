@@ -119,13 +119,15 @@ public class Tag extends AppCompatTextView {
         getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
-                _text();
-                _layoutParams();
-                _listener();
-                _bg();
+
                 if(isShown()){
+                    _text();
+                    _layoutParams();
+                    _listener();
+                    _bg();
                     Logly.d("  tag removeOnPreDrawListener ");
                     getViewTreeObserver().removeOnPreDrawListener(this);
+                    return false;
                 }
                 return true;
             }
