@@ -7,6 +7,7 @@
     <color name="colorGray2">#bdbdbd</color>
     <color name="colorPrimary2">#607D8B</color>
     <color name="write">@android:color/white</color>
+    <color name="favourite">#ef2a2a</color>
 
     <!--   bottom bar-->
     <color name="bb_active_color">@android:color/white</color>

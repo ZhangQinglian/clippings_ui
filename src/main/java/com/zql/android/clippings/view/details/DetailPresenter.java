@@ -16,6 +16,11 @@
 
 package com.zql.android.clippings.view.details;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.os.Environment;
+
+import com.zql.android.clippings.ClippingsApplication;
 import com.zql.android.clippings.mvpc.UseCase;
 import com.zql.android.clippings.mvpc.UseCaseHandler;
 import com.zql.android.clippings.sdk.parser.Clipping;
@@ -24,6 +29,10 @@ import com.zql.android.clippings.usecase.DeleteLabel;
 import com.zql.android.clippings.usecase.GetClippingById;
 import com.zql.android.clippings.usecase.GetClippingsNote;
 import com.zql.android.clippings.usecase.GetLabel;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.util.concurrent.Executors;
 
 /**
  * @author qinglian.zhang, created on 2017/3/1.
@@ -127,6 +136,26 @@ public class DetailPresenter implements DetailContract.Presenter {
 
             }
         });
+    }
+
+    @Override
+    public void saveDetailScreen(final Bitmap bitmap,Clipping clipping) {
+        final String fileName = clipping.title+"-"+clipping.location+".jpeg";
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    FileOutputStream fileOutputStream = new FileOutputStream(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/" + fileName);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG,50,fileOutputStream);
+                    fileOutputStream.flush();
+                    fileOutputStream.close();
+                    bitmap.recycle();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
     }
 
 }

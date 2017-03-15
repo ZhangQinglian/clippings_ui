@@ -20,7 +20,6 @@ import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
 
-import com.android.annotations.NonNull;
 import com.zql.android.clippings.ClippingsApplication;
 import com.zql.android.clippings.mvpc.UseCase;
 import com.zql.android.clippings.sdk.parser.Clipping;
@@ -62,7 +61,7 @@ public class GetClippingsNote extends UseCase<GetClippingsNote.RequestValues,Get
 
         private Clipping clipping;
 
-        public RequestValues(@NonNull Clipping clipping){
+        public RequestValues(Clipping clipping){
             this.clipping = clipping;
         }
 

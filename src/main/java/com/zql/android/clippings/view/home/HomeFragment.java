@@ -18,6 +18,9 @@ package com.zql.android.clippings.view.home;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -32,6 +35,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.vlonjatg.progressactivity.ProgressFrameLayout;
 import com.zql.android.clippings.BR;
@@ -307,6 +311,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View{
                     onClippingClick(integer,binding.getRoot());
                 }
             });
+
             CardView cardView = (CardView) binding.getRoot().findViewById(R.id.card_view);
             cardView.setCardBackgroundColor(Color.WHITE);
         }

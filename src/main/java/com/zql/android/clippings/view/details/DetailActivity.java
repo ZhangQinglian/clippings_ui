@@ -18,6 +18,8 @@ package com.zql.android.clippings.view.details;
 
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.zql.android.clippings.R;
 import com.zql.android.clippings.sdk.parser.Clipping;
@@ -62,5 +64,16 @@ public class DetailActivity extends BaseActivity implements DetailFragment.Detai
     @Override
     public void clippingUpdate(Clipping clipping) {
         //getSupportActionBar().setTitle(clipping.title);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return super.onPrepareOptionsMenu(menu);
     }
 }

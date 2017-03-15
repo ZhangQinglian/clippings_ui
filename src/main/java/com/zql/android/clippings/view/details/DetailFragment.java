@@ -16,15 +16,24 @@
 
 package com.zql.android.clippings.view.details;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Debug;
+import android.os.Trace;
 import android.support.annotation.Nullable;
 import android.transition.Fade;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.zql.android.clippings.ClippingsApplication;
 import com.zql.android.clippings.R;
 import com.zql.android.clippings.databinding.FragmentDetailBinding;
 import com.zql.android.clippings.sdk.parser.Clipping;
@@ -49,12 +58,15 @@ public class DetailFragment extends BaseFragment implements DetailContract.View{
 
     private Clipping mCurrentClipping ;
 
+    private View mDetailLayout;
+
     public interface DetailFragmentCallback{
         void clippingUpdate(Clipping clipping);
     }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -62,6 +74,15 @@ public class DetailFragment extends BaseFragment implements DetailContract.View{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mDetailBinding = FragmentDetailBinding.inflate(getActivity().getLayoutInflater());
         View view = mDetailBinding.getRoot();
+        view.findViewById(R.id.content).setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                ClipboardManager cm = (ClipboardManager) ClippingsApplication.own().getSystemService(Context.CLIPBOARD_SERVICE);
+                cm.setPrimaryClip(ClipData.newPlainText("label",mCurrentClipping.content));
+                Toast.makeText(ClippingsApplication.own(),"已复制",Toast.LENGTH_LONG).show();
+                return true;
+            }
+        });
         return view;
     }
 
@@ -98,6 +119,8 @@ public class DetailFragment extends BaseFragment implements DetailContract.View{
 
             }
         });
+        mDetailLayout = getView().findViewById(R.id.detail_layout);
+        mDetailLayout.setDrawingCacheEnabled(true);
     }
 
     @Override
@@ -137,5 +160,25 @@ public class DetailFragment extends BaseFragment implements DetailContract.View{
         return detailFragment;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.detail_menus,menu);
+    }
 
+
+    boolean f = true;
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_favourite:
+                f = !f;
+                if(f){
+                    item.setIcon(getResources().getDrawable(R.drawable.menu_favourite_0));
+                }else {
+                    item.setIcon(getResources().getDrawable(R.drawable.menu_favourite_1));
+                }
+                break;
+        }
+        return true;
+    }
 }

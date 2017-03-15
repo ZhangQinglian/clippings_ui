@@ -16,6 +16,8 @@
 
 package com.zql.android.clippings.view.details;
 
+import android.graphics.Bitmap;
+
 import com.zql.android.clippings.mvpc.IContract;
 import com.zql.android.clippings.mvpc.IPresenter;
 import com.zql.android.clippings.mvpc.IView;
@@ -41,6 +43,8 @@ public class DetailContract implements IContract {
         void loadLabels(String md5);
 
         void deleteLabel(String md5,String label);
+
+        void saveDetailScreen(Bitmap bitmap,Clipping clipping);
     }
 
     public interface View extends IView<Presenter>{
