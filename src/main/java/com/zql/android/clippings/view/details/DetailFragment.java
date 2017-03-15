@@ -60,6 +60,8 @@ public class DetailFragment extends BaseFragment implements DetailContract.View{
 
     private View mDetailLayout;
 
+    private Menu mMenu;
+
     public interface DetailFragmentCallback{
         void clippingUpdate(Clipping clipping);
     }
@@ -138,8 +140,18 @@ public class DetailFragment extends BaseFragment implements DetailContract.View{
         }
         //更新完clipping数据后加载对应label
         mPresenter.loadLabels(mCurrentClipping.md5);
+        updateFavouriteMenu(mMenu,mCurrentClipping.favourite);
     }
 
+    private void updateFavouriteMenu(Menu menu,int favourite){
+        if(menu != null){
+            if(favourite == Clipping.K_CLIPPINGS_FAVOURITE){
+                menu.findItem(R.id.menu_favourite).setIcon(getResources().getDrawable(R.drawable.menu_favourite_1));
+            }else {
+                menu.findItem(R.id.menu_favourite).setIcon(getResources().getDrawable(R.drawable.menu_favourite_0));
+            }
+        }
+    }
     @Override
     public void updateNote(Clipping clipping) {
         mDetailBinding.setNote(clipping);
@@ -148,6 +160,12 @@ public class DetailFragment extends BaseFragment implements DetailContract.View{
     @Override
     public void showLabels(List<Label> labels) {
         mTagsGroup.showLables(labels);
+    }
+
+    @Override
+    public void updateFavourite(int favourite) {
+        mCurrentClipping.favourite = favourite;
+        updateFavouriteMenu(mMenu,favourite);
     }
 
     @Override
@@ -163,19 +181,27 @@ public class DetailFragment extends BaseFragment implements DetailContract.View{
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.detail_menus,menu);
+        mMenu = menu;
     }
 
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        if(mCurrentClipping != null){
+            mMenu = menu;
+            updateFavouriteMenu(menu,mCurrentClipping.favourite);
+        }
+    }
 
-    boolean f = true;
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        int favourite = mCurrentClipping.favourite;
+
         switch (item.getItemId()){
             case R.id.menu_favourite:
-                f = !f;
-                if(f){
-                    item.setIcon(getResources().getDrawable(R.drawable.menu_favourite_0));
-                }else {
-                    item.setIcon(getResources().getDrawable(R.drawable.menu_favourite_1));
+                if(favourite == Clipping.K_CLIPPINGS_FAVOURITE){
+                    mPresenter.updateFavourite(mCurrentClipping.id,Clipping.K_CLIPPINGS_UN_FAVOURITE);
+                }else{
+                    mPresenter.updateFavourite(mCurrentClipping.id,Clipping.K_CLIPPINGS_FAVOURITE);
                 }
                 break;
         }

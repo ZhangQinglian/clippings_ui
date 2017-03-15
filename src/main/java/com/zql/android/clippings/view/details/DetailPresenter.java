@@ -29,6 +29,7 @@ import com.zql.android.clippings.usecase.DeleteLabel;
 import com.zql.android.clippings.usecase.GetClippingById;
 import com.zql.android.clippings.usecase.GetClippingsNote;
 import com.zql.android.clippings.usecase.GetLabel;
+import com.zql.android.clippings.usecase.UpdateFavourite;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -156,6 +157,22 @@ public class DetailPresenter implements DetailContract.Presenter {
             }
         });
 
+    }
+
+    @Override
+    public void updateFavourite(int id, int favourite) {
+        UpdateFavourite updateFavourite = new UpdateFavourite();
+        UseCaseHandler.getInstance().execute(updateFavourite, new UpdateFavourite.RequestValues(id, favourite), new UseCase.UseCaseCallback<UpdateFavourite.ResponseValue>() {
+            @Override
+            public void onSuccess(UpdateFavourite.ResponseValue response) {
+                mView.updateFavourite(response.getFavourite());
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
     }
 
 }

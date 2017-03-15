@@ -45,6 +45,13 @@ public class DetailContract implements IContract {
         void deleteLabel(String md5,String label);
 
         void saveDetailScreen(Bitmap bitmap,Clipping clipping);
+
+        /**
+         * 更新数据库
+         * @param id
+         * @param favourite
+         */
+        void updateFavourite(int id,int favourite);
     }
 
     public interface View extends IView<Presenter>{
@@ -53,5 +60,11 @@ public class DetailContract implements IContract {
         void updateNote(Clipping clipping);
 
         void showLabels(List<Label> labels);
+
+        /**
+         * 数据库更新成功后的回调
+         * @param favourite
+         */
+        void updateFavourite(int favourite);
     }
 }

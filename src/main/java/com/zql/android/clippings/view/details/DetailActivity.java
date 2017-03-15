@@ -19,7 +19,6 @@ package com.zql.android.clippings.view.details;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.view.Menu;
-import android.view.MenuItem;
 
 import com.zql.android.clippings.R;
 import com.zql.android.clippings.sdk.parser.Clipping;
