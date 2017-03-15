@@ -75,6 +75,16 @@ public class MainActivity extends BaseActivity {
         initPermission();
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
     private void initPermission(){
         Dexter.withActivity(this)
                 .withPermissions(
@@ -125,7 +135,6 @@ public class MainActivity extends BaseActivity {
         mTagsFragment = TagsFragment.getInstance(null);
         mTagsPresenter = new TagsPresenter(mTagsFragment);
 
-
         mBottomBar = (BottomBar) findViewById(R.id.main_bottom_bar);
         mBottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
@@ -156,11 +165,25 @@ public class MainActivity extends BaseActivity {
     }
 
     private void showHome() {
-        Logly.d("     tab all");
-        getSupportFragmentManager().beginTransaction().replace(R.id.main_container,mHomeFragment).commit();
+        if(mHomeFragment.isAdded()){
+            getSupportFragmentManager().beginTransaction().show(mHomeFragment).commit();
+        }else {
+            getSupportFragmentManager().beginTransaction().add(R.id.main_container,mHomeFragment).commit();
+        }
+        if(mTagsFragment.isAdded()){
+            getSupportFragmentManager().beginTransaction().hide(mTagsFragment).commit();
+        }
     }
 
     private void showLabel() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.main_container,mTagsFragment).commit();
+        if(mTagsFragment.isAdded()){
+            getSupportFragmentManager().beginTransaction().show(mTagsFragment).commit();
+        }else {
+            getSupportFragmentManager().beginTransaction().add(R.id.main_container,mTagsFragment).commit();
+        }
+        if(mHomeFragment.isAdded()){
+            getSupportFragmentManager().beginTransaction().hide(mHomeFragment).commit();
+        }
     }
+
 }

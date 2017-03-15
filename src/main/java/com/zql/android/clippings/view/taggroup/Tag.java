@@ -23,6 +23,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
+import android.os.Parcelable;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -37,7 +39,7 @@ import com.zqlite.android.logly.Logly;
 /**
  * @author qinglian.zhang, created on 2017/3/2.
  */
-public class Tag extends TextView {
+public class Tag extends AppCompatTextView {
 
     public static final int STATUS_NORMAL = 1;
     public static final int STATUS_EDIT = 2;
@@ -118,10 +120,13 @@ public class Tag extends TextView {
             @Override
             public boolean onPreDraw() {
                 _text();
-                _bg();
                 _layoutParams();
                 _listener();
-                getViewTreeObserver().removeOnPreDrawListener(this);
+                _bg();
+                if(isShown()){
+                    Logly.d("  tag removeOnPreDrawListener ");
+                    getViewTreeObserver().removeOnPreDrawListener(this);
+                }
                 return true;
             }
         });
@@ -184,5 +189,4 @@ public class Tag extends TextView {
             }
         });
     }
-
 }

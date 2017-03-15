@@ -80,6 +80,7 @@ public class TagsFragment extends BaseFragment implements TagsContract.View{
     @Override
     public void onResume() {
         super.onResume();
+        Logly.d("   TagsFragment : onResume" );
         mPresenter.getAllLabels();
     }
 
