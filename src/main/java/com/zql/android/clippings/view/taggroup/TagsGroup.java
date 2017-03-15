@@ -368,6 +368,7 @@ public class TagsGroup extends ViewGroup implements Tag.TagCallback ,SpecialTag.
             final EditText editText = new EditText(ClippingsApplication.own());
             editText.setSingleLine();
             editText.setGravity(Gravity.CENTER);
+            editText.setTextColor(getResources().getColor(R.color.colorPrimary));
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setMessage(R.string.add_label)
                    .setView(editText).setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
