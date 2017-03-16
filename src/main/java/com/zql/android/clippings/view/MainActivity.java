@@ -21,6 +21,7 @@ import android.content.ClipData;
 import android.content.Intent;
 import android.support.annotation.IdRes;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -156,7 +157,6 @@ public class MainActivity extends BaseActivity {
             }
         });
         mBottomBar.setDefaultTab(R.id.tab_all);
-
     }
 
     @Override
