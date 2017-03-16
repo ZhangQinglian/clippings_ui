@@ -61,6 +61,18 @@ public class HomePresenter implements HomeContract.Presenter{
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        if(args != null && id == HomeContract.QUERY_CLIPPINGS_ID){
+            if(ClippingsFragment.ARG_TAG_FAVOURITE.equals(args.getString(ClippingsFragment.ARG_TAG_FAVOURITE))){
+                ClippingsLoader loader = new ClippingsLoader(
+                        ClippingsApplication.own(),
+                        ClippingContract.CLIPPINGS_URI,
+                        ClippingContract.PROJECTION_CLIPPINGS_ALL,
+                        ClippingContract.CLIPPING_FAVOURITE_SELECTION,
+                        new String[]{String.valueOf(Clipping.K_CLIPPINGS_FAVOURITE)},
+                        null);
+                return loader;
+            }
+        }
         if(id == HomeContract.QUERY_CLIPPINGS_ID){
             ClippingsLoader loader = new ClippingsLoader(
                     ClippingsApplication.own(),

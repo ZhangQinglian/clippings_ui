@@ -18,9 +18,7 @@ package com.zql.android.clippings.view;
 
 import android.Manifest;
 import android.content.ClipData;
-import android.content.ContentResolver;
 import android.content.Intent;
-import android.database.Cursor;
 import android.support.annotation.IdRes;
 import android.os.Bundle;
 
@@ -32,12 +30,10 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 import com.zql.android.clippings.R;
-import com.zql.android.clippings.sdk.parser.Clipping;
 import com.zql.android.clippings.sdk.parser.ClippingsParser;
 import com.zql.android.clippings.sdk.provider.ClippingContract;
-import com.zql.android.clippings.view.details.DetailFragment;
 import com.zql.android.clippings.view.home.HomeContract;
-import com.zql.android.clippings.view.home.HomeFragment;
+import com.zql.android.clippings.view.home.ClippingsFragment;
 import com.zql.android.clippings.view.home.HomePresenter;
 import com.zql.android.clippings.view.tags.TagsContract;
 import com.zql.android.clippings.view.tags.TagsFragment;
@@ -47,7 +43,6 @@ import com.zqlite.android.logly.Logly;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -55,13 +50,17 @@ public class MainActivity extends BaseActivity {
 
     private BottomBar mBottomBar;
 
-    private HomeFragment mHomeFragment;
+    private ClippingsFragment mHomeFragment;
 
     private HomeContract.Presenter mHomePresenter;
 
     private TagsFragment mTagsFragment;
 
     private TagsContract.Presenter mTagsPresenter;
+
+    private ClippingsFragment mFavouriteFragment;
+
+    private HomeContract.Presenter mFavouritePresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,10 +129,14 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        mHomeFragment = HomeFragment.getInstance(null);
+        mHomeFragment = ClippingsFragment.getInstance(null);
         mHomePresenter = new HomePresenter(mHomeFragment);
         mTagsFragment = TagsFragment.getInstance(null);
         mTagsPresenter = new TagsPresenter(mTagsFragment);
+        Bundle bundle = new Bundle();
+        bundle.putString(ClippingsFragment.ARG_TAG_FAVOURITE,ClippingsFragment.ARG_TAG_FAVOURITE);
+        mFavouriteFragment = ClippingsFragment.getInstance(bundle);
+        mFavouritePresenter = new HomePresenter(mFavouriteFragment);
 
         mBottomBar = (BottomBar) findViewById(R.id.main_bottom_bar);
         mBottomBar.setOnTabSelectListener(new OnTabSelectListener() {
@@ -147,6 +150,7 @@ public class MainActivity extends BaseActivity {
                         showLabel();
                         break;
                     case R.id.tab_like:
+                        showFavourite();
                         break;
                 }
             }
@@ -168,10 +172,13 @@ public class MainActivity extends BaseActivity {
         if(mHomeFragment.isAdded()){
             getSupportFragmentManager().beginTransaction().show(mHomeFragment).commit();
         }else {
-            getSupportFragmentManager().beginTransaction().add(R.id.main_container,mHomeFragment).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.main_container, mHomeFragment).commit();
         }
         if(mTagsFragment.isAdded()){
             getSupportFragmentManager().beginTransaction().hide(mTagsFragment).commit();
+        }
+        if(mFavouriteFragment.isAdded()){
+            getSupportFragmentManager().beginTransaction().hide(mFavouriteFragment).commit();
         }
     }
 
@@ -180,6 +187,23 @@ public class MainActivity extends BaseActivity {
             getSupportFragmentManager().beginTransaction().show(mTagsFragment).commit();
         }else {
             getSupportFragmentManager().beginTransaction().add(R.id.main_container,mTagsFragment).commit();
+        }
+        if(mHomeFragment.isAdded()){
+            getSupportFragmentManager().beginTransaction().hide(mHomeFragment).commit();
+        }
+        if(mFavouriteFragment.isAdded()){
+            getSupportFragmentManager().beginTransaction().hide(mFavouriteFragment).commit();
+        }
+    }
+
+    private void showFavourite(){
+        if(mFavouriteFragment.isAdded()){
+            getSupportFragmentManager().beginTransaction().show(mFavouriteFragment).commit();
+        }else {
+            getSupportFragmentManager().beginTransaction().add(R.id.main_container,mFavouriteFragment).commit();
+        }
+        if(mTagsFragment.isAdded()){
+            getSupportFragmentManager().beginTransaction().hide(mTagsFragment).commit();
         }
         if(mHomeFragment.isAdded()){
             getSupportFragmentManager().beginTransaction().hide(mHomeFragment).commit();

@@ -8,4 +8,10 @@
     <string name="add">添加</string>
     <string name="cancel">取消</string>
     <string name="complete">完成</string>
+    <string name="label_empty_title">无标签</string>
+    <string name="label_empty_content">请在简报详情页添加标签</string>
+    <string name="favourite_empty_title">无收藏</string>
+    <string name="favourite_empty_content">请在简报详情页添加收藏</string>
+    <string name="clipping_empty_title">无简报</string>
+    <string name="clipping_empty_content">将你Kindle中的My Clippings.txt文件分享给简报即可添加</string>
 </resources>

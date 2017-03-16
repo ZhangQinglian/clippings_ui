@@ -18,13 +18,12 @@ package com.zql.android.clippings.view.tagfilter;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 
 import com.zql.android.clippings.R;
 import com.zql.android.clippings.view.BaseActivity;
 import com.zql.android.clippings.view.home.HomeContract;
-import com.zql.android.clippings.view.home.HomeFragment;
+import com.zql.android.clippings.view.home.ClippingsFragment;
 import com.zql.android.clippings.view.home.HomePresenter;
 import com.zqlite.android.logly.Logly;
 
@@ -36,7 +35,7 @@ import java.util.List;
  */
 public class TagFilterActivity extends BaseActivity {
 
-    private HomeFragment mHomeFragment ;
+    private ClippingsFragment mClippingsFragment;
 
     private HomeContract.Presenter mPresenter;
 
@@ -59,9 +58,9 @@ public class TagFilterActivity extends BaseActivity {
         Logly.d("" + mMd5s.size());
         Bundle bundle = new Bundle();
         bundle.putStringArrayList(FILTER_MD5S, (ArrayList<String>) mMd5s);
-        mHomeFragment = HomeFragment.getInstance(bundle);
-        mPresenter = new HomePresenter(mHomeFragment);
-        getSupportFragmentManager().beginTransaction().add(R.id.tag_filter_container,mHomeFragment).commit();
+        mClippingsFragment = ClippingsFragment.getInstance(bundle);
+        mPresenter = new HomePresenter(mClippingsFragment);
+        getSupportFragmentManager().beginTransaction().add(R.id.tag_filter_container, mClippingsFragment).commit();
     }
 
     @Override

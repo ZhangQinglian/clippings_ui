@@ -98,7 +98,7 @@ public class TagsFragment extends BaseFragment implements TagsContract.View{
     @Override
     public void showLabels(List<Label> labels) {
         if(labels.size() < 1){
-            mProgressLayout.showEmpty(R.drawable.ic_empty,"暂无内容","请添加");
+            mProgressLayout.showEmpty(R.drawable.empty_box,getResources().getString(R.string.label_empty_title),getResources().getString(R.string.label_empty_content));
         }else {
             mTagsGroup.showLables(labels);
             mProgressLayout.showContent();

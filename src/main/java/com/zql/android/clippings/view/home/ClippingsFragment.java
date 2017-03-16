@@ -18,9 +18,6 @@ package com.zql.android.clippings.view.home;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -35,7 +32,6 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.vlonjatg.progressactivity.ProgressFrameLayout;
 import com.zql.android.clippings.BR;
@@ -61,7 +57,9 @@ import io.reactivex.functions.Consumer;
 /**
  * @author qinglian.zhang, created on 2017/2/23.
  */
-public class HomeFragment extends BaseFragment implements HomeContract.View{
+public class ClippingsFragment extends BaseFragment implements HomeContract.View{
+
+    public static final String ARG_TAG_FAVOURITE = "favourite";
 
     private final int kGridSpace = 8;
 
@@ -74,14 +72,25 @@ public class HomeFragment extends BaseFragment implements HomeContract.View{
     private HomeAdapter mHomeAdapter ;
 
     private List<String> mMd5s ;
+
+    private boolean mIsFavourite = false;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getLoaderManager().initLoader(HomeContract.QUERY_CLIPPINGS_ID,null,mPresenter);
         Bundle args = getArguments();
         if(args != null){
             mMd5s = getArguments().getStringArrayList(TagFilterActivity.FILTER_MD5S);
+            if(ARG_TAG_FAVOURITE.equals(getArguments().getString(ARG_TAG_FAVOURITE))){
+                mIsFavourite = true;
+            }else {
+                mIsFavourite = false;
+            }
         }
+        Bundle bundle = new Bundle();
+        if(mIsFavourite){
+            bundle.putString(ARG_TAG_FAVOURITE,ARG_TAG_FAVOURITE);
+        }
+        getLoaderManager().initLoader(HomeContract.QUERY_CLIPPINGS_ID,bundle,mPresenter);
     }
 
     @Override
@@ -138,10 +147,10 @@ public class HomeFragment extends BaseFragment implements HomeContract.View{
 
     }
 
-    public static HomeFragment getInstance(Bundle args){
-        HomeFragment homeFragment = new HomeFragment();
-        homeFragment.setArguments(args);
-        return homeFragment;
+    public static ClippingsFragment getInstance(Bundle args){
+        ClippingsFragment clippingsFragment = new ClippingsFragment();
+        clippingsFragment.setArguments(args);
+        return clippingsFragment;
     }
 
     @Override
@@ -155,7 +164,11 @@ public class HomeFragment extends BaseFragment implements HomeContract.View{
     }
 
     public void hideContent(){
-        mProgressFrameLayout.showEmpty(R.drawable.ic_empty,"暂无内容","请导入");
+        if(mIsFavourite){
+            mProgressFrameLayout.showEmpty(R.drawable.empty_box,getResources().getString(R.string.favourite_empty_title),getResources().getString(R.string.favourite_empty_content));
+        }else {
+            mProgressFrameLayout.showEmpty(R.drawable.empty_box,getResources().getString(R.string.clipping_empty_title),getResources().getString(R.string.clipping_empty_content));
+        }
     }
     @Override
     public void updateClippings(List<Clipping> clippings) {
@@ -313,7 +326,11 @@ public class HomeFragment extends BaseFragment implements HomeContract.View{
             });
 
             CardView cardView = (CardView) binding.getRoot().findViewById(R.id.card_view);
-            cardView.setCardBackgroundColor(Color.WHITE);
+            if(mIsFavourite){
+                cardView.setCardBackgroundColor(Color.parseColor("#FFE2B2B2"));
+            }else {
+                cardView.setCardBackgroundColor(Color.WHITE);
+            }
         }
 
     }
