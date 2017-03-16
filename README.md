@@ -1,4 +1,5 @@
 # clippings_ui
+`Kindle 简报` is an simple app which help people review their Kindle's clippings.
 
 ## Support
 - [BottomBar](https://github.com/roughike/BottomBar)
