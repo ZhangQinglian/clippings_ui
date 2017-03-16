@@ -18,8 +18,6 @@ package com.zql.android.clippings;
 
 import android.app.Application;
 
-import com.amitshekhar.DebugDB;
-import com.zqlite.android.logly.Logly;
 
 /**
  * @author qinglian.zhang, created on 2017/2/23.
@@ -32,7 +30,6 @@ public class ClippingsApplication extends Application {
     public void onCreate() {
         super.onCreate();
         if(sInstance == null) sInstance = this;
-        Logly.d("debug db : " + DebugDB.getAddressLog());
     }
 
     public static ClippingsApplication own(){
