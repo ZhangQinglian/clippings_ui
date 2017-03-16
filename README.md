@@ -13,3 +13,5 @@
 - Import [clippings_ui](https://github.com/ZhangQinglian/clippings_ui) and [clippings_core](https://github.com/ZhangQinglian/clippings_core).
 - Let clippings_ui depend clippings_core.
 - Build clippings_ui.
+
+## Screenshots
