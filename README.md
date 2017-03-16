@@ -24,7 +24,7 @@
 ## Download
 - v1.0
 [Kindle 简报 v1.0](https://github.com/ZhangQinglian/clippings_ui/blob/master/clippings_ui-release.apk)
-Future:
-1. Import and review 'My Clippings.txt'.
-2. Add or remote tags on Clipping.
-3. Like or unlike Clipping.
+
+		1. Import and review 'My Clippings.txt'.
+		2. Add or remote tags on Clipping.
+		3. Like or unlike Clipping.
