@@ -15,3 +15,4 @@
 - Build clippings_ui.
 
 ## Screenshots
+![Screenshots](https://github.com/ZhangQinglian/clippings_ui/blob/master/screen/screenshot.png)
