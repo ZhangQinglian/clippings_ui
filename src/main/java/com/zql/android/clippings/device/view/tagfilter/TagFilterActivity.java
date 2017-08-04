@@ -19,6 +19,7 @@ package com.zql.android.clippings.device.view.tagfilter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.MenuItem;
 
 import com.zql.android.clippings.R;
 import com.zql.android.clippings.device.view.BaseActivity;
@@ -63,6 +64,7 @@ public class TagFilterActivity extends BaseActivity {
         mClippingsFragment = ClippingsFragment.getInstance(bundle);
         mPresenter = new HomePresenter(mClippingsFragment);
         getSupportFragmentManager().beginTransaction().add(R.id.tag_filter_container, mClippingsFragment).commit();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -78,5 +80,12 @@ public class TagFilterActivity extends BaseActivity {
     @Override
     protected void initData() {
 
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home){
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

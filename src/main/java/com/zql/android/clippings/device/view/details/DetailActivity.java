@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.view.Menu;
+import android.view.MenuItem;
 
 import com.zql.android.clippings.R;
 import com.zql.android.clippings.device.db.Clipping;
@@ -58,6 +59,7 @@ public class DetailActivity extends BaseActivity implements DetailFragment.Detai
         mView = DetailFragment.getInstance(bundle);
         mPresenter = new DetailPresenter(mView);
         addFragment(R.id.detail_container,mView);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -67,7 +69,7 @@ public class DetailActivity extends BaseActivity implements DetailFragment.Detai
 
     @Override
     public void clippingUpdate(Clipping clipping) {
-        //getSupportActionBar().setTitle(clipping.title);
+        getSupportActionBar().setTitle(clipping.title);
     }
 
     @Override
@@ -79,5 +81,13 @@ public class DetailActivity extends BaseActivity implements DetailFragment.Detai
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home){
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
