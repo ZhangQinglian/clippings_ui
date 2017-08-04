@@ -16,12 +16,10 @@
 
 package com.zql.android.clippings.usecase;
 
-import android.content.ContentValues;
-import android.net.Uri;
 
-import com.zql.android.clippings.ClippingsApplication;
-import com.zql.android.clippings.mvpc.UseCase;
-import com.zql.android.clippings.sdk.provider.LabelContract;
+import com.zql.android.clippings.device.ClippingsApplication;
+import com.zql.android.clippings.bridge.mvpc.UseCase;
+import com.zql.android.clippings.device.db.Label;
 
 /**
  * @author qinglian.zhang, created on 2017/3/6.
@@ -30,15 +28,10 @@ public class AddLabel extends UseCase <AddLabel.RequestValues,AddLabel.ResponseV
 
     @Override
     protected void executeUseCase(RequestValues requestValues) {
-        ContentValues values = new ContentValues();
-        values.put(LabelContract.TABLE_LABEL_MD5,requestValues.getMd5());
-        values.put(LabelContract.TABLE_LABEL_LABEL,requestValues.getLabel());
-        Uri uri = ClippingsApplication.own().getContentResolver().insert(LabelContract.LABEL_URI,values);
-        if(uri != null){
-            getUseCaseCallback().onSuccess(new ResponseValue());
-        }else {
-            getUseCaseCallback().onError();
-        }
+        Label label = new Label();
+        label.label = requestValues.label;
+        label.md5 = requestValues.md5;
+        ClippingsApplication.own().getClippingsDB().clippingDao().insertLabel(label);
     }
 
     public static final class RequestValues implements UseCase.RequestValues{

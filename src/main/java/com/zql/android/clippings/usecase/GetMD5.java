@@ -19,10 +19,9 @@ package com.zql.android.clippings.usecase;
 import android.content.ContentResolver;
 import android.database.Cursor;
 
-import com.zql.android.clippings.ClippingsApplication;
-import com.zql.android.clippings.mvpc.UseCase;
-import com.zql.android.clippings.sdk.provider.Label;
-import com.zql.android.clippings.sdk.provider.LabelContract;
+import com.zql.android.clippings.device.ClippingsApplication;
+import com.zql.android.clippings.bridge.mvpc.UseCase;
+import com.zql.android.clippings.device.db.Label;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,25 +33,10 @@ public class GetMD5 extends UseCase <GetMD5.RequestValues,GetMD5.ResponseValue>{
 
     @Override
     protected void executeUseCase(RequestValues requestValues) {
-        ContentResolver resolver = ClippingsApplication.own().getContentResolver();
-        Cursor cursor;
-        cursor = resolver.query(LabelContract.LABEL_URI,LabelContract.LABEL_PROJECTION_ALL,LabelContract.LABEL_SELECTION_LABEL,new String[]{requestValues.getLabel()},null);
-        if(cursor != null){
-            try {
-                List<Label> labels = new ArrayList<>();
-                while (cursor.moveToNext()){
-                    Label label = new Label(cursor);
-                    labels.add(label);
-                }
-                getUseCaseCallback().onSuccess(new ResponseValue(labels));
-            }catch (Exception e){
-                e.printStackTrace();
-                getUseCaseCallback().onError();
-            }finally {
-                cursor.close();
-            }
+        List<String> md5s = ClippingsApplication.own().getClippingsDB().clippingDao().getMd5sByLabel(getRequestValues().label);
+        if(md5s != null){
+            getUseCaseCallback().onSuccess(new ResponseValue(md5s));
         }
-
     }
 
     public static final class RequestValues implements UseCase.RequestValues{
@@ -69,13 +53,13 @@ public class GetMD5 extends UseCase <GetMD5.RequestValues,GetMD5.ResponseValue>{
     }
 
     public static final class ResponseValue implements UseCase.ResponseValue{
-        private List<Label> labels;
+        private List<String> labels;
 
-        public ResponseValue(List<Label> labels){
+        public ResponseValue(List<String> labels){
             this.labels = labels;
         }
 
-        public List<Label> getLabels(){
+        public List<String> getLabels(){
             return labels;
         }
     }

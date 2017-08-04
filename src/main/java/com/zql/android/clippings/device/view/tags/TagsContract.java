@@ -14,43 +14,30 @@
  *    limitations under the License.
  ******************************************************************************/
 
-package com.zql.android.clippings.usecase;
+package com.zql.android.clippings.device.view.tags;
 
-import android.content.ContentValues;
+import com.zql.android.clippings.bridge.mvpc.IContract;
+import com.zql.android.clippings.bridge.mvpc.IPresenter;
+import com.zql.android.clippings.bridge.mvpc.IView;
+import com.zql.android.clippings.device.db.Label;
 
-import com.zql.android.clippings.device.ClippingsApplication;
-import com.zql.android.clippings.bridge.mvpc.UseCase;
+import java.util.List;
 
 /**
  * @author qinglian.zhang, created on 2017/3/6.
  */
-public class DeleteLabel extends UseCase <DeleteLabel.RequestValues,DeleteLabel.ResponseValue>{
+public class TagsContract implements IContract {
 
-    @Override
-    protected void executeUseCase(RequestValues requestValues) {
+    public interface Presenter extends IPresenter{
+        void getAllLabels();
+
+        void loadMd5(String label);
+
 
     }
 
-    public static final class RequestValues implements UseCase.RequestValues{
-        private String md5;
-
-        private String label;
-
-        public RequestValues(String md5,String label){
-            this.md5 = md5;
-            this.label = label;
-        }
-
-        public String getMd5(){
-            return md5;
-        }
-
-        public String getLabel(){
-            return label;
-        }
-    }
-
-    public static final class ResponseValue implements UseCase.ResponseValue{
-
+    public interface View extends IView<Presenter>{
+        void showLabels(List<Label> labels);
+        void loadMd5Finish(List<String> md5s,String label);
     }
 }

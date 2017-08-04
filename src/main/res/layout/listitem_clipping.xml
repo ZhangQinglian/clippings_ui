@@ -17,7 +17,7 @@
 
     <data>
 
-        <import type="com.zql.android.clippings.sdk.parser.Clipping"/>
+        <import type="com.zql.android.clippings.device.db.Clipping"/>
         <variable
             name="clipping"
             type="Clipping" />
@@ -69,6 +69,7 @@
                 android:paddingBottom="16dp"
                 android:text="@{clipping.content}"
                 android:textColor="@android:color/black"
+                android:maxLines="10"
                 android:textSize="14sp"/>
             <RelativeLayout
                 android:layout_width="match_parent"

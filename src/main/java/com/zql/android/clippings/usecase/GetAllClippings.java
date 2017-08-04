@@ -16,54 +16,47 @@
 
 package com.zql.android.clippings.usecase;
 
-
 import com.zql.android.clippings.bridge.mvpc.UseCase;
 import com.zql.android.clippings.device.ClippingsApplication;
-import com.zql.android.clippings.device.db.Label;
+import com.zql.android.clippings.device.db.Clipping;
 
 import java.util.List;
 
 /**
- * @author qinglian.zhang, created on 2017/3/6.
+ * Created by scott on 2017/8/3.
  */
-public class GetLabel extends UseCase <GetLabel.RequestValues,GetLabel.ResponseValue>{
+
+public class GetAllClippings extends UseCase<GetAllClippings.RequestValues,GetAllClippings.ResponseValues> {
 
     @Override
     protected void executeUseCase(RequestValues requestValues) {
-        List<Label> labelList ;
-        if(requestValues.md5 == null || requestValues.md5.trim().length() == 0){
-            labelList = ClippingsApplication.own().getClippingsDB().clippingDao().getAllLabels();
+
+        boolean isFavourite = requestValues.isFavourite;
+
+        List<Clipping> clippings;
+        if(isFavourite){
+            clippings = ClippingsApplication.own().getClippingsDB().clippingDao().getAllFavourite();
         }else {
-            labelList = ClippingsApplication.own().getClippingsDB().clippingDao().getLabelsByMd5(requestValues.md5);
+            clippings = ClippingsApplication.own().getClippingsDB().clippingDao().getAllClippings();
         }
-        if(labelList != null){
-            getUseCaseCallback().onSuccess(new ResponseValue(labelList));
-        }
+
+        ResponseValues responseValues =  new ResponseValues(clippings);
+        getUseCaseCallback().onSuccess(responseValues);
     }
 
     public static final class RequestValues implements UseCase.RequestValues{
-        private String md5;
+        private boolean isFavourite = false;
 
-
-        public RequestValues(String md5){
-            this.md5 = md5;
+        public RequestValues(boolean isFavourite){
+            this.isFavourite = isFavourite;
         }
-
-        public String getMd5(){
-            return md5;
-        }
-
     }
 
-    public static final class ResponseValue implements UseCase.ResponseValue{
-        private List<Label> labels;
+    public static final class ResponseValues implements UseCase.ResponseValue{
+        public List<Clipping> clippings ;
 
-        public ResponseValue(List<Label> labels){
-            this.labels = labels;
-        }
-
-        public List<Label> getLabels(){
-            return labels;
+        public ResponseValues(List<Clipping> clippingList){
+            clippings = clippingList;
         }
     }
 }

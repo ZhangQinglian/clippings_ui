@@ -16,14 +16,10 @@
 
 package com.zql.android.clippings.usecase;
 
-import android.content.ContentResolver;
-import android.database.Cursor;
-import android.net.Uri;
 
-import com.zql.android.clippings.ClippingsApplication;
-import com.zql.android.clippings.mvpc.UseCase;
-import com.zql.android.clippings.sdk.parser.Clipping;
-import com.zql.android.clippings.sdk.provider.ClippingContract;
+import com.zql.android.clippings.device.ClippingsApplication;
+import com.zql.android.clippings.bridge.mvpc.UseCase;
+import com.zql.android.clippings.device.db.Clipping;
 
 /**
  * @author qinglian.zhang, created on 2017/3/1.
@@ -33,22 +29,9 @@ public class GetClippingById extends UseCase<GetClippingById.RequestValues,GetCl
     @Override
     protected void executeUseCase(RequestValues requestValues) {
         int clippingId = requestValues.getClippingId();
-        ContentResolver resolver = ClippingsApplication.own().getContentResolver();
-        Cursor cursor = resolver.query(Uri.withAppendedPath(ClippingContract.CLIPPINGS_URI,String.valueOf(clippingId)),ClippingContract.PROJECTION_CLIPPINGS_ALL,null,null,null);
-        if(cursor != null){
-            try {
-                cursor.moveToFirst();
-                Clipping clipping = Clipping.getInstance(cursor);
-                ResponseValue responseValue = new ResponseValue(clipping);
-                getUseCaseCallback().onSuccess(responseValue);
-            }catch (Exception e){
-                getUseCaseCallback().onError();
-            }
-            finally {
-                cursor.close();
-            }
-        }
-
+        Clipping clipping = ClippingsApplication.own().getClippingsDB().clippingDao().getClippingById(clippingId);
+        ResponseValue responseValue = new ResponseValue(clipping);
+        getUseCaseCallback().onSuccess(responseValue);
     }
 
     public static final class RequestValues implements UseCase.RequestValues{

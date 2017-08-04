@@ -18,12 +18,10 @@ package com.zql.android.clippings.usecase;
 
 import android.content.ContentResolver;
 import android.database.Cursor;
-import android.net.Uri;
 
-import com.zql.android.clippings.ClippingsApplication;
-import com.zql.android.clippings.mvpc.UseCase;
-import com.zql.android.clippings.sdk.parser.Clipping;
-import com.zql.android.clippings.sdk.provider.ClippingContract;
+import com.zql.android.clippings.device.ClippingsApplication;
+import com.zql.android.clippings.bridge.mvpc.UseCase;
+import com.zql.android.clippings.device.db.Clipping;
 
 /**
  * @author qinglian.zhang, created on 2017/3/1.
@@ -33,26 +31,26 @@ public class GetClippingsNote extends UseCase<GetClippingsNote.RequestValues,Get
     @Override
     protected void executeUseCase(RequestValues requestValues) {
         Clipping clipping = requestValues.getClipping();
-        if(clipping.type == Clipping.K_CLIPPING_TYPE_LABEL){
-            ContentResolver resolver = ClippingsApplication.own().getContentResolver();
-            Cursor cursor = resolver.query(ClippingContract.CLIPPINGS_URI,
-                    ClippingContract.PROJECTION_CLIPPINGS_ALL,
-                    ClippingContract.CLIPPING_NOTE_SELECTION,
-                    new String[]{clipping.title,clipping.author,Clipping.getNoteLocation(clipping),String.valueOf(Clipping.K_CLIPPING_TYPE_NOTE)},null);
-            if(cursor != null){
-                try {
-                    cursor.moveToFirst();
-                    Clipping note = Clipping.getInstance(cursor);
-                    ResponseValue responseValue = new ResponseValue(note);
-                    getUseCaseCallback().onSuccess(responseValue);
-                }catch (Exception e){
-                    getUseCaseCallback().onError();
-                }
-                finally {
-                    cursor.close();
-                }
-            }
-        }
+//        if(clipping.type == Clipping.K_CLIPPING_TYPE_LABEL){
+//            ContentResolver resolver = ClippingsApplication.own().getContentResolver();
+//            Cursor cursor = resolver.query(ClippingContract.CLIPPINGS_URI,
+//                    ClippingContract.PROJECTION_CLIPPINGS_ALL,
+//                    ClippingContract.CLIPPING_NOTE_SELECTION,
+//                    new String[]{clipping.title,clipping.author,Clipping.getNoteLocation(clipping),String.valueOf(Clipping.K_CLIPPING_TYPE_NOTE)},null);
+//            if(cursor != null){
+//                try {
+//                    cursor.moveToFirst();
+//                    Clipping note = Clipping.getInstance(cursor);
+//                    ResponseValue responseValue = new ResponseValue(note);
+//                    getUseCaseCallback().onSuccess(responseValue);
+//                }catch (Exception e){
+//                    getUseCaseCallback().onError();
+//                }
+//                finally {
+//                    cursor.close();
+//                }
+//            }
+//        }
 
 
     }

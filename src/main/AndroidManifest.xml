@@ -5,13 +5,13 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <application
-        android:name=".ClippingsApplication"
+        android:name=".device.ClippingsApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.MainActivity"
+        <activity android:name=".device.view.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -25,17 +25,12 @@
             </intent-filter>
 
         </activity>
-        <activity android:name=".view.details.DetailActivity"
+        <activity android:name=".device.view.details.DetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"/>
-        <activity android:name=".view.tagfilter.TagFilterActivity"
+        <activity android:name=".device.view.tagfilter.TagFilterActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"/>
-        <provider
-            android:authorities="com.zql.android.clippings.sdk.provider"
-            android:name=".sdk.provider.ClippingsProvider"
-            android:exported="false"
-            android:enabled="true"/>
     </application>
 
 </manifest>

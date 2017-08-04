@@ -17,7 +17,7 @@
 
     <data>
 
-        <import type="com.zql.android.clippings.sdk.parser.Clipping" />
+        <import type="com.zql.android.clippings.device.db.Clipping" />
 
         <import type="android.view.View" />
 
@@ -92,7 +92,8 @@
                 android:paddingTop="15dp"
                 android:text="@{clipping.content}"
                 android:textColor="@android:color/black"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:textIsSelectable="true"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -109,13 +110,13 @@
                 android:textSize="20sp"
                 android:visibility="@{note == null?View.GONE : View.VISIBLE}"
                 android:background="@color/colorGray1"/>
-            <com.zql.android.clippings.view.taggroup.TagsGroup
+            <com.zql.android.clippings.device.view.taggroup.TagsGroup
                 android:id="@+id/tags_group"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="40dp"
                 app:tag_mode="edit">
-            </com.zql.android.clippings.view.taggroup.TagsGroup>
+            </com.zql.android.clippings.device.view.taggroup.TagsGroup>
         </LinearLayout>
     </ScrollView>
 </layout>

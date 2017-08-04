@@ -19,10 +19,9 @@ package com.zql.android.clippings.usecase;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 
-import com.zql.android.clippings.ClippingsApplication;
-import com.zql.android.clippings.mvpc.UseCase;
-import com.zql.android.clippings.sdk.parser.Clipping;
-import com.zql.android.clippings.sdk.provider.ClippingContract;
+import com.zql.android.clippings.device.ClippingsApplication;
+import com.zql.android.clippings.bridge.mvpc.UseCase;
+import com.zql.android.clippings.device.db.Clipping;
 
 /**
  * @author qinglian.zhang, created on 2017/3/15.
@@ -31,34 +30,25 @@ public class UpdateFavourite extends UseCase<UpdateFavourite.RequestValues,Updat
 
     @Override
     protected void executeUseCase(RequestValues requestValues) {
-        int id = requestValues.getId();
-        int favourite = requestValues.getFavourite();
-        ContentResolver resolver = ClippingsApplication.own().getContentResolver();
-        ContentValues values = new ContentValues();
-        values.put(ClippingContract.TABLE_CLIPPINGS_FAVOURITE,favourite);
-        int index = resolver.update(ClippingContract.CLIPPINGS_URI,values,ClippingContract.CLIPPING_ID_SELECTION,new String[]{String.valueOf(id)});
-        if(index == 1){
+        Clipping clipping = requestValues.clipping;
+        int favourite = requestValues.favourite;
+        clipping.favourite = favourite;
+        int c = ClippingsApplication.own().getClippingsDB().clippingDao().updateClipping(clipping);
+        if( c == 1){
             getUseCaseCallback().onSuccess(new ResponseValue(favourite));
         }
     }
 
     public static final class RequestValues implements UseCase.RequestValues{
 
-        private int id;
+        private Clipping clipping;
         private int favourite;
 
-        public RequestValues(int id, int favourite) {
-            this.id = id;
+        public RequestValues(Clipping clipping,int favourite) {
+            this.clipping = clipping;
             this.favourite = favourite;
         }
 
-        public int getId() {
-            return id;
-        }
-
-        public int getFavourite() {
-            return favourite;
-        }
     }
 
     public static final class ResponseValue implements UseCase.ResponseValue{
