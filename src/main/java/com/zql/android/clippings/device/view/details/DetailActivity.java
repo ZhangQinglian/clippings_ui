@@ -22,6 +22,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.zql.android.clippings.R;
 import com.zql.android.clippings.device.db.Clipping;
@@ -73,6 +74,13 @@ public class DetailActivity extends BaseActivity implements DetailFragment.Detai
                         break;
                 }
                 return false;
+            }
+        });
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_toolbar_back));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
             }
         });
     }

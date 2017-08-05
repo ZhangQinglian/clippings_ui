@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.zql.android.clippings.R;
 import com.zql.android.clippings.device.view.BaseActivity;
@@ -59,6 +60,13 @@ public class TagFilterActivity extends BaseActivity {
         }
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(tag);
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_toolbar_back));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         mMd5s = intent.getExtras().getStringArrayList(FILTER_MD5S);
         Logly.d("" + mMd5s.size());
         Bundle bundle = new Bundle();

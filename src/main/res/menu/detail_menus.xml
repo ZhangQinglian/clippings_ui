@@ -16,9 +16,16 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.zql.android.clippings.device.view.details.DetailActivity">
     <item android:id="@+id/menu_favourite"
         android:title="@string/bb_tab_favourite"
         android:icon="@drawable/menu_favourite_0"
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/menu_hide"
+        android:title="@string/menu_hide"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_menu_hide"/>
 </menu>

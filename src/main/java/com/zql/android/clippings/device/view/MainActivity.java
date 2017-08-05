@@ -20,12 +20,18 @@ import android.Manifest;
 import android.content.ClipData;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.IdRes;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
+import android.view.View;
 
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -66,6 +72,9 @@ public class MainActivity extends BaseActivity implements ClippingsParser.Callba
 
     private HomeContract.Presenter mFavouritePresenter;
 
+    private DrawerLayout mDrawerLayout;
+
+    private ActionBarDrawerToggle mDrawerToggle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,7 +143,51 @@ public class MainActivity extends BaseActivity implements ClippingsParser.Callba
     protected void initView() {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.app_name);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(R.string.app_name);
+        actionBar.setHomeButtonEnabled(true);
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+        mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout,toolbar,
+                R.string.menu_hide,R.string.menu_hide){
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+                super.onDrawerStateChanged(newState);
+            }
+
+            @Override
+            public View.OnClickListener getToolbarNavigationClickListener() {
+                return super.getToolbarNavigationClickListener();
+            }
+        };
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
+        mDrawerLayout.setScrimColor(Color.TRANSPARENT);
+        mDrawerToggle.setDrawerSlideAnimationEnabled(true);
+        mDrawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDrawerLayout.openDrawer(mDrawerLayout,true);
+            }
+        });
+
+        mDrawerToggle.setDrawerSlideAnimationEnabled(true);
+        mDrawerToggle.syncState();
         mHomeFragment = ClippingsFragment.getInstance(null);
         mHomePresenter = new HomePresenter(mHomeFragment);
         mTagsFragment = TagsFragment.getInstance(null);

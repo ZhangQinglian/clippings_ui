@@ -14,4 +14,6 @@
     <string name="favourite_empty_content">请在简报详情页添加收藏</string>
     <string name="clipping_empty_title">无简报</string>
     <string name="clipping_empty_content">将你Kindle中的My Clippings.txt文件分享给简报即可添加</string>
+
+    <string name="menu_hide">隐藏</string>
 </resources>
