@@ -16,10 +16,9 @@
 
 package com.zql.android.clippings.usecase;
 
-import android.content.ContentValues;
-
-import com.zql.android.clippings.device.ClippingsApplication;
 import com.zql.android.clippings.bridge.mvpc.UseCase;
+import com.zql.android.clippings.device.ClippingsApplication;
+import com.zql.android.clippings.device.db.Label;
 
 /**
  * @author qinglian.zhang, created on 2017/3/6.
@@ -28,6 +27,17 @@ public class DeleteLabel extends UseCase <DeleteLabel.RequestValues,DeleteLabel.
 
     @Override
     protected void executeUseCase(RequestValues requestValues) {
+
+        int id = ClippingsApplication.own().getClippingsDB().clippingDao().getLabelId(requestValues.md5,requestValues.label);
+
+        Label label = new Label();
+        label.md5 = requestValues.md5;
+        label.label = requestValues.label;
+        label.id = id;
+        int i = ClippingsApplication.own().getClippingsDB().clippingDao().deleteLabel(label);
+        if(i > 0){
+            getUseCaseCallback().onSuccess(new ResponseValue());
+        }
 
     }
 

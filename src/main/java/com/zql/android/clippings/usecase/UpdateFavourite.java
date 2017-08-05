@@ -16,9 +16,6 @@
 
 package com.zql.android.clippings.usecase;
 
-import android.content.ContentResolver;
-import android.content.ContentValues;
-
 import com.zql.android.clippings.device.ClippingsApplication;
 import com.zql.android.clippings.bridge.mvpc.UseCase;
 import com.zql.android.clippings.device.db.Clipping;

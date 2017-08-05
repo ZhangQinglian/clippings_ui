@@ -17,6 +17,7 @@
 package com.zql.android.clippings.device.db;
 
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
@@ -58,4 +59,13 @@ public interface ClippingDao {
 
     @Query("SELECT * FROM clippings where favourite = 1")
     List<Clipping> getAllFavourite();
+
+    @Query("SELECT * FROM clippings where title = :title and author = :author and location = :noteLocation and type = 2")
+    Clipping getClippingNode(String title,String author,String noteLocation);
+
+    @Delete
+    int deleteLabel(Label label);
+
+    @Query("SELECT id FROM label WHERE md5 = :md5 and label = :label")
+    int getLabelId(String md5,String label);
 }

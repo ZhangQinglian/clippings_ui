@@ -94,7 +94,7 @@ public class ClippingsParser {
      *
      * @param inputStream My Clippings.txt对应的InputStream
      */
-    public void parse(final InputStream inputStream, Context context) {
+    public void parse(final InputStream inputStream, Context context,Callback callback) {
         Flowable.create(new FlowableOnSubscribe<String>() {
             @Override
             public void subscribe(FlowableEmitter<String> e) throws Exception {
@@ -114,7 +114,7 @@ public class ClippingsParser {
                 }
                 e.onComplete();
             }
-        }, BackpressureStrategy.BUFFER).observeOn(Schedulers.io()).subscribeOn(Schedulers.io()).subscribe(new ClippingSubscriber(context));
+        }, BackpressureStrategy.BUFFER).observeOn(Schedulers.io()).subscribeOn(Schedulers.io()).subscribe(new ClippingSubscriber(context,callback));
     }
 
     private class ClippingSubscriber implements Subscriber<String> {
@@ -126,8 +126,11 @@ public class ClippingsParser {
         private List<String> mRawData = new ArrayList<>();
 
         private Context mContext;
-        public ClippingSubscriber(Context context){
+
+        private Callback callback;
+        public ClippingSubscriber(Context context,Callback callback){
             mContext = context;
+            this.callback = callback;
         }
 
         @Override
@@ -159,7 +162,7 @@ public class ClippingsParser {
             UseCaseHandler.getInstance().execute(new InsertClippings(), new InsertClippings.RequestValue(mClippingList), new UseCase.UseCaseCallback<InsertClippings.ResponseValue>() {
                 @Override
                 public void onSuccess(InsertClippings.ResponseValue response) {
-
+                    callback.success();
                 }
 
                 @Override

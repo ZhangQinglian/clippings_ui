@@ -46,6 +46,7 @@ public class InsertClippings extends UseCase<InsertClippings.RequestValue,Insert
             }
         }
         dao.insertClippings(filterClippings);
+        getUseCaseCallback().onSuccess(new ResponseValue());
     }
 
     public static final class RequestValue implements UseCase.RequestValues{

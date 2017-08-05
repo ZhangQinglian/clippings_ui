@@ -31,28 +31,11 @@ public class GetClippingsNote extends UseCase<GetClippingsNote.RequestValues,Get
     @Override
     protected void executeUseCase(RequestValues requestValues) {
         Clipping clipping = requestValues.getClipping();
-//        if(clipping.type == Clipping.K_CLIPPING_TYPE_LABEL){
-//            ContentResolver resolver = ClippingsApplication.own().getContentResolver();
-//            Cursor cursor = resolver.query(ClippingContract.CLIPPINGS_URI,
-//                    ClippingContract.PROJECTION_CLIPPINGS_ALL,
-//                    ClippingContract.CLIPPING_NOTE_SELECTION,
-//                    new String[]{clipping.title,clipping.author,Clipping.getNoteLocation(clipping),String.valueOf(Clipping.K_CLIPPING_TYPE_NOTE)},null);
-//            if(cursor != null){
-//                try {
-//                    cursor.moveToFirst();
-//                    Clipping note = Clipping.getInstance(cursor);
-//                    ResponseValue responseValue = new ResponseValue(note);
-//                    getUseCaseCallback().onSuccess(responseValue);
-//                }catch (Exception e){
-//                    getUseCaseCallback().onError();
-//                }
-//                finally {
-//                    cursor.close();
-//                }
-//            }
-//        }
-
-
+        String noteLocation = Clipping.getNoteLocation(clipping);
+        Clipping note = ClippingsApplication.own().getClippingsDB().clippingDao().getClippingNode(clipping.title,clipping.author,noteLocation);
+        if(note != null){
+            getUseCaseCallback().onSuccess(new ResponseValue(note));
+        }
     }
 
     public static final class RequestValues implements UseCase.RequestValues{

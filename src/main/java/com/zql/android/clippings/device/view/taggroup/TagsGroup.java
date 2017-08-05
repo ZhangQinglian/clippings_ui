@@ -165,7 +165,9 @@ public class TagsGroup extends ViewGroup implements Tag.TagCallback ,SpecialTag.
                 Label label = labels.get(i);
                 if(mTagSet.contains(label.label)) continue;
                 addTagText(label.label,TAG_CHAGE_SHOW);
-                addView(new Tag(getContext(),label.label));
+                Tag tag = new Tag(getContext(),label.label);
+                tag.setTag(label.id);
+                addView(tag);
             }
         }
     }

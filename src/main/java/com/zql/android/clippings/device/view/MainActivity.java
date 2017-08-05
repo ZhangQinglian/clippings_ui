@@ -19,6 +19,13 @@ package com.zql.android.clippings.device.view;
 import android.Manifest;
 import android.content.ClipData;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.provider.DocumentsContract;
+import android.provider.DocumentsProvider;
+import android.provider.MediaStore;
 import android.support.annotation.IdRes;
 import android.os.Bundle;
 
@@ -68,14 +75,8 @@ public class MainActivity extends BaseActivity implements ClippingsParser.Callba
         Logly.setGlobalTag(new Logly.Tag(Logly.FLAG_THREAD_NAME, "Clippings", Logly.DEBUG));
         Intent intent = getIntent();
         if (intent != null) {
-            //parseClippings(getIntent());
+            parseClippings(getIntent());
         }
-        try {
-            initDatabase(getAssets().open("1.txt"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         initPermission();
     }
 
@@ -112,7 +113,7 @@ public class MainActivity extends BaseActivity implements ClippingsParser.Callba
             ClipData clipData = intent.getClipData();
             ClipData.Item item = clipData.getItemAt(0);
             if (item.getUri() != null) {
-                String path = item.getUri().getPath();
+                String path = getFilePathByUri(item.getUri());
                 try {
                     File file = new File(path);
                     if(ClippingsParser.CLIPPINGS_NAME.equals(file.getName())){
@@ -169,7 +170,7 @@ public class MainActivity extends BaseActivity implements ClippingsParser.Callba
     }
 
     private void initDatabase(InputStream inputStream) {
-        ClippingsParser.own().parse(inputStream, this);
+        ClippingsParser.own().parse(inputStream, this,this);
     }
 
     private void showHome() {
@@ -222,5 +223,64 @@ public class MainActivity extends BaseActivity implements ClippingsParser.Callba
     @Override
     public void success() {
         mHomePresenter.loadClippings(false);
+    }
+
+    public String getFilePathByUri(Uri uri) {
+        if (uri == null) {
+            return null;
+        }
+        String filePath = "unknown";//default fileName
+        Uri filePathUri = uri;
+        try {
+            if (uri.getScheme().compareTo("content") == 0) {
+                if (Build.VERSION.SDK_INT == 22 || Build.VERSION.SDK_INT == 23) {
+                    try {
+                        String pathUri = uri.getPath();
+                        String newUri = pathUri.substring(pathUri.indexOf("content"),
+                                pathUri.lastIndexOf("/ACTUAL"));
+                        uri = Uri.parse(newUri);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    Cursor cursor = getApplicationContext().getContentResolver()
+                            .query(uri, new String[]{MediaStore.Images.Media.DATA}, null, null, null);
+                    if (cursor != null) {
+                        try {
+                            if (cursor.moveToFirst()) {
+                                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                                filePath = cursor.getString(column_index);
+                            }
+                            cursor.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } else {
+                    Cursor cursor = getApplicationContext().getContentResolver().
+                            query(uri, new String[]{MediaStore.Images.Media.DATA}, null, null, null);
+                    if (cursor != null) {
+                        try {
+                            if (cursor.moveToFirst()) {
+                                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                                filePathUri = Uri.parse(cursor.getString(column_index));
+                                filePath = filePathUri.getPath();
+                            }
+                        } catch (Exception e) {
+                            cursor.close();
+                        }
+                    }
+                }
+            } else if (uri.getScheme().compareTo("file") == 0) {
+                filePath = filePathUri.getPath();
+            } else {
+                filePath = filePathUri.getPath();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return filePath;
     }
 }

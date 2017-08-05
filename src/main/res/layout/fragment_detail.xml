@@ -100,16 +100,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:clickable="true"
-                android:foreground="?android:selectableItemBackground"
                 android:paddingBottom="15dp"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
                 android:paddingTop="15dp"
+                android:textIsSelectable="true"
                 android:text="@{Clipping.getNote(note)}"
-                android:textColor="@android:color/black"
-                android:textSize="20sp"
+                android:textColor="@color/favourite"
+                android:textSize="16sp"
                 android:visibility="@{note == null?View.GONE : View.VISIBLE}"
-                android:background="@color/colorGray1"/>
+                android:background="@color/colorGray1"
+                android:textStyle="italic" />
             <com.zql.android.clippings.device.view.taggroup.TagsGroup
                 android:id="@+id/tags_group"
                 android:layout_width="match_parent"
