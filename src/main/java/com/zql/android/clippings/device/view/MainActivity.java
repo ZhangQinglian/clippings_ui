@@ -25,6 +25,7 @@ import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.IdRes;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -131,6 +132,9 @@ public class MainActivity extends BaseActivity implements ClippingsParser.Callba
 
     @Override
     protected void initView() {
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.app_name);
         mHomeFragment = ClippingsFragment.getInstance(null);
         mHomePresenter = new HomePresenter(mHomeFragment);
         mTagsFragment = TagsFragment.getInstance(null);

@@ -50,6 +50,8 @@ public class DetailContract implements IContract {
          * @param favourite 目标值
          */
         void updateFavourite(Clipping clipping,int favourite);
+
+        void onMenuClick(int id);
     }
 
     public interface View extends IView<Presenter>{
@@ -64,5 +66,7 @@ public class DetailContract implements IContract {
          * @param favourite
          */
         void updateFavourite(int favourite);
+
+        void onMeneClick(int id);
     }
 }

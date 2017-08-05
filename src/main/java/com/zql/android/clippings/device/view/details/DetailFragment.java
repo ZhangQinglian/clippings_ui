@@ -56,6 +56,7 @@ public class DetailFragment extends BaseFragment implements DetailContract.View{
 
     public interface DetailFragmentCallback{
         void clippingUpdate(Clipping clipping);
+        void updateFavourite(int favourite);
     }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -123,17 +124,11 @@ public class DetailFragment extends BaseFragment implements DetailContract.View{
         }
         //更新完clipping数据后加载对应label
         mPresenter.loadLabels(mCurrentClipping.md5);
-        updateFavouriteMenu(mMenu,mCurrentClipping.favourite);
+        updateFavouriteMenu(mCurrentClipping.favourite);
     }
 
-    private void updateFavouriteMenu(Menu menu,int favourite){
-        if(menu != null){
-            if(favourite == Clipping.K_CLIPPINGS_FAVOURITE){
-                menu.findItem(R.id.menu_favourite).setIcon(getResources().getDrawable(R.drawable.menu_favourite_1));
-            }else {
-                menu.findItem(R.id.menu_favourite).setIcon(getResources().getDrawable(R.drawable.menu_favourite_0));
-            }
-        }
+    private void updateFavouriteMenu(int favourite){
+        ((DetailFragmentCallback)getActivity()).updateFavourite(favourite);
     }
     @Override
     public void updateNote(Clipping clipping) {
@@ -148,7 +143,19 @@ public class DetailFragment extends BaseFragment implements DetailContract.View{
     @Override
     public void updateFavourite(int favourite) {
         mCurrentClipping.favourite = favourite;
-        updateFavouriteMenu(mMenu,favourite);
+        updateFavouriteMenu(favourite);
+    }
+
+    @Override
+    public void onMeneClick(int id) {
+        if(id == R.id.menu_favourite){
+            int favourite = mCurrentClipping.favourite;
+            if(favourite == Clipping.K_CLIPPINGS_FAVOURITE){
+                mPresenter.updateFavourite(mCurrentClipping,Clipping.K_CLIPPINGS_UN_FAVOURITE);
+            }else{
+                mPresenter.updateFavourite(mCurrentClipping,Clipping.K_CLIPPINGS_FAVOURITE);
+            }
+        }
     }
 
     @Override
@@ -161,33 +168,4 @@ public class DetailFragment extends BaseFragment implements DetailContract.View{
         return detailFragment;
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.detail_menus,menu);
-        mMenu = menu;
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        if(mCurrentClipping != null){
-            mMenu = menu;
-            updateFavouriteMenu(menu,mCurrentClipping.favourite);
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int favourite = mCurrentClipping.favourite;
-
-        switch (item.getItemId()){
-            case R.id.menu_favourite:
-                if(favourite == Clipping.K_CLIPPINGS_FAVOURITE){
-                    mPresenter.updateFavourite(mCurrentClipping,Clipping.K_CLIPPINGS_UN_FAVOURITE);
-                }else{
-                    mPresenter.updateFavourite(mCurrentClipping,Clipping.K_CLIPPINGS_FAVOURITE);
-                }
-                break;
-        }
-        return true;
-    }
 }

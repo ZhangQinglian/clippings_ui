@@ -19,6 +19,7 @@ package com.zql.android.clippings.device.view.tagfilter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.zql.android.clippings.R;
@@ -56,7 +57,8 @@ public class TagFilterActivity extends BaseActivity {
         if(tag == null || tag.trim().length() == 0){
             throw new RuntimeException("invalid tag");
         }
-        getSupportActionBar().setTitle(tag);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle(tag);
         mMd5s = intent.getExtras().getStringArrayList(FILTER_MD5S);
         Logly.d("" + mMd5s.size());
         Bundle bundle = new Bundle();
@@ -64,7 +66,6 @@ public class TagFilterActivity extends BaseActivity {
         mClippingsFragment = ClippingsFragment.getInstance(bundle);
         mPresenter = new HomePresenter(mClippingsFragment);
         getSupportFragmentManager().beginTransaction().add(R.id.tag_filter_container, mClippingsFragment).commit();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

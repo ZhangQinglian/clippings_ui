@@ -19,6 +19,7 @@ package com.zql.android.clippings.device.view.details;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -36,6 +37,7 @@ public class DetailActivity extends BaseActivity implements DetailFragment.Detai
 
     private DetailFragment mView;
 
+    private Toolbar toolbar;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +52,8 @@ public class DetailActivity extends BaseActivity implements DetailFragment.Detai
 
     @Override
     protected void initView() {
+
+        toolbar = findViewById(R.id.toolbar);
         int id = getIntent().getIntExtra(DetailContract.PICK_CLIPPING_ID,-1);
         if(id == -1){
             throw new RuntimeException("id could not be -1");
@@ -59,7 +63,18 @@ public class DetailActivity extends BaseActivity implements DetailFragment.Detai
         mView = DetailFragment.getInstance(bundle);
         mPresenter = new DetailPresenter(mView);
         addFragment(R.id.detail_container,mView);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.inflateMenu(R.menu.detail_menus);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.menu_favourite:
+                        mPresenter.onMenuClick(R.id.menu_favourite);
+                        break;
+                }
+                return false;
+            }
+        });
     }
 
     @Override
@@ -69,25 +84,17 @@ public class DetailActivity extends BaseActivity implements DetailFragment.Detai
 
     @Override
     public void clippingUpdate(Clipping clipping) {
-        getSupportActionBar().setTitle(clipping.title);
+        toolbar.setTitle(clipping.title);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == android.R.id.home){
-            finish();
+    public void updateFavourite(int favourite) {
+        MenuItem menuItem = toolbar.getMenu().findItem(R.id.menu_favourite);
+        if(favourite == Clipping.K_CLIPPINGS_FAVOURITE){
+            menuItem.setIcon(getResources().getDrawable(R.drawable.menu_favourite_1));
+        }else {
+            menuItem.setIcon(getResources().getDrawable(R.drawable.menu_favourite_0));
         }
-        return super.onOptionsItemSelected(item);
+
     }
 }

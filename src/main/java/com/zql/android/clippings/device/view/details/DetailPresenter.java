@@ -152,4 +152,9 @@ public class DetailPresenter implements DetailContract.Presenter {
         });
     }
 
+    @Override
+    public void onMenuClick(int id) {
+        mView.onMeneClick(id);
+    }
+
 }
