@@ -31,6 +31,9 @@
         <activity android:name=".device.view.tagfilter.TagFilterActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"/>
+        <activity android:name=".device.view.paste.PasteActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>

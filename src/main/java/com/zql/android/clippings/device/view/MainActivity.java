@@ -32,6 +32,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.TextView;
 
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -45,6 +46,7 @@ import com.zql.android.clippings.device.parser.ClippingsParser;
 import com.zql.android.clippings.device.view.home.HomeContract;
 import com.zql.android.clippings.device.view.home.ClippingsFragment;
 import com.zql.android.clippings.device.view.home.HomePresenter;
+import com.zql.android.clippings.device.view.paste.PasteActivity;
 import com.zql.android.clippings.device.view.tags.TagsContract;
 import com.zql.android.clippings.device.view.tags.TagsFragment;
 import com.zql.android.clippings.device.view.tags.TagsPresenter;
@@ -215,6 +217,7 @@ public class MainActivity extends BaseActivity implements ClippingsParser.Callba
             }
         });
         mBottomBar.setDefaultTab(R.id.tab_all);
+        initDrawer();
     }
 
     @Override
@@ -222,6 +225,17 @@ public class MainActivity extends BaseActivity implements ClippingsParser.Callba
 
     }
 
+    private void initDrawer(){
+        TextView paste = findViewById(R.id.paste);
+        paste.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDrawerLayout.closeDrawer(Gravity.LEFT);
+                Intent intent = new Intent(MainActivity.this, PasteActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
     private void initDatabase(InputStream inputStream) {
         ClippingsParser.own().parse(inputStream, this,this);
     }

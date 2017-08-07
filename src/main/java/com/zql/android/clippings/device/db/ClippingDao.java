@@ -22,6 +22,8 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
+import com.zql.android.clippings.device.db.paste.PasteItem;
+
 import java.util.List;
 
 /**
@@ -68,4 +70,15 @@ public interface ClippingDao {
 
     @Query("SELECT id FROM label WHERE md5 = :md5 and label = :label")
     int getLabelId(String md5,String label);
+
+
+    ///////////////粘贴板管理////////////////////
+    @Insert()
+    long addPasteItem(PasteItem pasteItem);
+
+    @Query("SELECT * FROM pastes")
+    List<PasteItem> getAllPastes();
+
+    @Query("SELECT * FROM pastes WHERE content = :pasteContent")
+    PasteItem findPasteItem(String pasteContent);
 }

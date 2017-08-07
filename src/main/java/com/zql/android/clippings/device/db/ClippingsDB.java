@@ -19,11 +19,13 @@ package com.zql.android.clippings.device.db;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 
+import com.zql.android.clippings.device.db.paste.PasteItem;
+
 /**
  * Created by scott on 2017/8/3.
  */
 
-@Database(entities = {Clipping.class,Label.class},version = 1)
+@Database(entities = {Clipping.class,Label.class, PasteItem.class},version = 1)
 public abstract class ClippingsDB extends RoomDatabase {
     public abstract ClippingDao clippingDao();
 }
