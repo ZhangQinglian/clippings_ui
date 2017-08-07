@@ -81,4 +81,7 @@ public interface ClippingDao {
 
     @Query("SELECT * FROM pastes WHERE content = :pasteContent")
     PasteItem findPasteItem(String pasteContent);
+
+    @Delete
+    int deletePasteItem(PasteItem pasteItem);
 }

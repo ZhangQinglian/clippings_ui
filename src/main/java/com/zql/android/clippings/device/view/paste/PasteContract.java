@@ -16,7 +16,7 @@ import java.util.List;
 public interface PasteContract extends IContract {
 
     interface Presenter extends IPresenter{
-        void deletePaste(String content);
+        void deletePaste(PasteItem pasteItem);
         void checkPaste(ClipboardManager clipboardManager);
         void addPaste(CharSequence charSequence);
         void fresh();

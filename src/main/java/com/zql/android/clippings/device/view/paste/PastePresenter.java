@@ -8,8 +8,10 @@ import android.content.Context;
 import com.zql.android.clippings.bridge.mvpc.UseCase;
 import com.zql.android.clippings.bridge.mvpc.UseCaseHandler;
 import com.zql.android.clippings.device.ClippingsApplication;
+import com.zql.android.clippings.device.db.paste.PasteItem;
 import com.zql.android.clippings.usecase.AddPasteItem;
 import com.zql.android.clippings.usecase.CheckPasteExist;
+import com.zql.android.clippings.usecase.DeletePasteItem;
 import com.zql.android.clippings.usecase.GetAllPastes;
 
 /**
@@ -27,8 +29,20 @@ public class PastePresenter implements PasteContract.Presenter {
     }
 
     @Override
-    public void deletePaste(String content) {
+    public void deletePaste(PasteItem pasteItem) {
+        DeletePasteItem.RequestValues value = new DeletePasteItem.RequestValues();
+        value.pasteItem = pasteItem;
+        UseCaseHandler.getInstance().execute(new DeletePasteItem(), value, new UseCase.UseCaseCallback<DeletePasteItem.ResponseValue>() {
+            @Override
+            public void onSuccess(DeletePasteItem.ResponseValue response) {
+                fresh();
+            }
 
+            @Override
+            public void onError() {
+
+            }
+        });
     }
 
     @Override
@@ -110,4 +124,6 @@ public class PastePresenter implements PasteContract.Presenter {
     public void stop() {
 
     }
+
+
 }

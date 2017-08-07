@@ -1,12 +1,11 @@
 package com.zql.android.clippings.device.view.paste;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +46,7 @@ public class PasteFragment extends BaseFragment implements PasteContract.View {
 
         adapter = new PasteAdapter();
         recyclerView.setAdapter(adapter);
+
     }
 
     @Override
@@ -83,7 +83,7 @@ public class PasteFragment extends BaseFragment implements PasteContract.View {
 
     @Override
     public void copySuccess() {
-        Snackbar.make(getView(),R.string.paste_copy_success,Snackbar.LENGTH_LONG).show();
+        Snackbar.make(getView(),R.string.paste_copy_success,Snackbar.LENGTH_SHORT).show();
     }
 
 
@@ -97,8 +97,8 @@ public class PasteFragment extends BaseFragment implements PasteContract.View {
             notifyDataSetChanged();
         }
 
-        private String getPasteAt(int position){
-            return pasteItems.get(position).clipContent;
+        private PasteItem getPasteAt(int position){
+            return pasteItems.get(position);
         }
         @Override
         public PasteHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -127,15 +127,29 @@ public class PasteFragment extends BaseFragment implements PasteContract.View {
             this.itemPasteBinding = itemPasteBinding;
         }
 
-        public void bind(PasteItem pasteItem){
+        public void bind(final PasteItem pasteItem){
             itemPasteBinding.setVariable(BR.pasteItem, pasteItem);
             itemPasteBinding.executePendingBindings();
+            itemPasteBinding.getRoot().findViewById(R.id.paste_content).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String paste = adapter.getPasteAt(getAdapterPosition()).clipContent;
+                    mPresenter.copy(paste);
+                }
+            });
+
             itemPasteBinding.getRoot().findViewById(R.id.paste_content).setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    String paste = adapter.getPasteAt(getAdapterPosition());
-                    mPresenter.copy(paste);
-                    return false;
+                    final PasteItem paste = adapter.getPasteAt(getAdapterPosition());
+                    Snackbar snackbar = Snackbar.make(getView(),getResources().getString(R.string.paste_delete_paste,paste),Snackbar.LENGTH_INDEFINITE);
+                    snackbar.setAction(R.string.comm_delete, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            mPresenter.deletePaste(paste);
+                        }
+                    }).show();
+                    return true;
                 }
             });
         }

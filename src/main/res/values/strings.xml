@@ -1,6 +1,8 @@
 <resources>
 
     <string name="comm_ok">确认</string>
+    <string name="comm_delete">删除</string>
+
     <string name="app_name">Kindle 简报</string>
     <string name="bb_tab_home">首页</string>
     <string name="bb_tab_label">标签</string>
@@ -19,9 +21,10 @@
 
     <string name="menu_hide">隐藏</string>
 
-    <string name="paste_title">粘贴板管理</string>
+    <string name="paste_title">粘贴板</string>
     <string name="paste_new_clip">发现可添加内容</string>
     <string name="paste_add_clip">添加到本页</string>
     <string name="paste_check">检测粘贴板</string>
     <string name="paste_copy_success">已复制到粘贴板</string>
+    <string name="paste_delete_paste">是否删除 %1$s</string>
 </resources>

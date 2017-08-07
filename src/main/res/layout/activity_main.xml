@@ -58,10 +58,7 @@
             android:layout_width="240dp"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            android:choiceMode="singleChoice"
-            android:divider="@android:color/transparent"
-            android:dividerHeight="0dp"
-            android:background="#111">
+            android:background="@color/colorPrimary_alpha50">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -75,7 +72,7 @@
                     android:id="@+id/paste"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:text="粘贴板管理"
+                    android:text="@string/paste_title"
                     android:textColor="@color/white"
                     android:textSize="16sp"
                     android:gravity="center"/>
