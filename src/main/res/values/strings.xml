@@ -19,8 +19,10 @@
     <string name="clipping_empty_title">无简报</string>
     <string name="clipping_empty_content">将你Kindle中的My Clippings.txt文件分享给简报即可添加</string>
 
-    <string name="menu_hide">隐藏</string>
+    <string name="menu_hide">主页中隐藏</string>
+    <string name="menu_show">主页中显示</string>
 
+    <string name="drawer_category_tools">小工具</string>
     <string name="paste_title">粘贴板</string>
     <string name="paste_new_clip">发现可添加内容</string>
     <string name="paste_add_clip">添加到本页</string>

@@ -5,7 +5,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,7 +66,7 @@ public class PasteFragment extends BaseFragment implements PasteContract.View {
     @Override
     public void showNewClipDialog(final CharSequence clipContent) {
 
-        Snackbar.make(getView(),clipContent,Snackbar.LENGTH_INDEFINITE).setAction(R.string.paste_add_clip, new View.OnClickListener() {
+        Snackbar.make(getView(),clipContent,Snackbar.LENGTH_LONG).setAction(R.string.paste_add_clip, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mPresenter.addPaste(clipContent);
@@ -103,7 +102,7 @@ public class PasteFragment extends BaseFragment implements PasteContract.View {
         @Override
         public PasteHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            ItemPasteBinding itemPasteBinding = ItemPasteBinding.inflate(inflater);
+            ItemPasteBinding itemPasteBinding = ItemPasteBinding.inflate(inflater,parent,false);
             return new PasteHolder(itemPasteBinding);
         }
 
@@ -142,7 +141,7 @@ public class PasteFragment extends BaseFragment implements PasteContract.View {
                 @Override
                 public boolean onLongClick(View view) {
                     final PasteItem paste = adapter.getPasteAt(getAdapterPosition());
-                    Snackbar snackbar = Snackbar.make(getView(),getResources().getString(R.string.paste_delete_paste,paste),Snackbar.LENGTH_INDEFINITE);
+                    Snackbar snackbar = Snackbar.make(getView(),getResources().getString(R.string.paste_delete_paste,paste.clipContent),Snackbar.LENGTH_LONG);
                     snackbar.setAction(R.string.comm_delete, new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {

@@ -28,6 +28,7 @@ import com.zql.android.clippings.usecase.GetClippingById;
 import com.zql.android.clippings.usecase.GetClippingsNote;
 import com.zql.android.clippings.usecase.GetLabel;
 import com.zql.android.clippings.usecase.UpdateFavourite;
+import com.zql.android.clippings.usecase.UpdateStatus;
 
 import java.io.FileOutputStream;
 import java.util.concurrent.Executors;
@@ -143,6 +144,25 @@ public class DetailPresenter implements DetailContract.Presenter {
             @Override
             public void onSuccess(UpdateFavourite.ResponseValue response) {
                 mView.updateFavourite(response.getFavourite());
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
+    }
+
+    @Override
+    public void updateStatus(Clipping clipping, int status) {
+        UpdateStatus updateStatus = new UpdateStatus();
+        UpdateStatus.RequstValues values = new UpdateStatus.RequstValues();
+        values.clipping = clipping;
+        values.status = status;
+        UseCaseHandler.getInstance().execute(updateStatus, values, new UseCase.UseCaseCallback<UpdateStatus.ResponseValues>() {
+            @Override
+            public void onSuccess(UpdateStatus.ResponseValues response) {
+                mView.updateStatus(response.status);
             }
 
             @Override

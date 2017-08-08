@@ -72,6 +72,9 @@ public class DetailActivity extends BaseActivity implements DetailFragment.Detai
                     case R.id.menu_favourite:
                         mPresenter.onMenuClick(R.id.menu_favourite);
                         break;
+                    case R.id.menu_hide:
+                        mPresenter.onMenuClick(R.id.menu_hide);
+                        break;
                 }
                 return false;
             }
@@ -104,5 +107,15 @@ public class DetailActivity extends BaseActivity implements DetailFragment.Detai
             menuItem.setIcon(getResources().getDrawable(R.drawable.menu_favourite_0));
         }
 
+    }
+
+    @Override
+    public void updateStatus(int status) {
+        MenuItem menuItem = toolbar.getMenu().findItem(R.id.menu_hide);
+        if(status == Clipping.K_CLIPPING_STATUS_NORMAL){
+            menuItem.setTitle(R.string.menu_hide);
+        }else {
+            menuItem.setTitle(R.string.menu_show);
+        }
     }
 }

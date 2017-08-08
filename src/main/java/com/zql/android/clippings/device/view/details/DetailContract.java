@@ -51,6 +51,8 @@ public class DetailContract implements IContract {
          */
         void updateFavourite(Clipping clipping,int favourite);
 
+        void updateStatus(Clipping clipping,int status);
+
         void onMenuClick(int id);
     }
 
@@ -66,6 +68,8 @@ public class DetailContract implements IContract {
          * @param favourite
          */
         void updateFavourite(int favourite);
+
+        void updateStatus(int status);
 
         void onMeneClick(int id);
     }

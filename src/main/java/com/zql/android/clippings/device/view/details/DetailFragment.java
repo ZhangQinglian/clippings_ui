@@ -21,8 +21,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -57,6 +55,7 @@ public class DetailFragment extends BaseFragment implements DetailContract.View{
     public interface DetailFragmentCallback{
         void clippingUpdate(Clipping clipping);
         void updateFavourite(int favourite);
+        void updateStatus(int status);
     }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -125,10 +124,14 @@ public class DetailFragment extends BaseFragment implements DetailContract.View{
         //更新完clipping数据后加载对应label
         mPresenter.loadLabels(mCurrentClipping.md5);
         updateFavouriteMenu(mCurrentClipping.favourite);
+        updateStatusMenu(mCurrentClipping.status);
     }
 
     private void updateFavouriteMenu(int favourite){
         ((DetailFragmentCallback)getActivity()).updateFavourite(favourite);
+    }
+    private void updateStatusMenu(int status){
+        ((DetailFragmentCallback)getActivity()).updateStatus(status);
     }
     @Override
     public void updateNote(Clipping clipping) {
@@ -147,6 +150,12 @@ public class DetailFragment extends BaseFragment implements DetailContract.View{
     }
 
     @Override
+    public void updateStatus(int status) {
+        mCurrentClipping.status = status;
+        updateStatusMenu(status);
+    }
+
+    @Override
     public void onMeneClick(int id) {
         if(id == R.id.menu_favourite){
             int favourite = mCurrentClipping.favourite;
@@ -154,6 +163,13 @@ public class DetailFragment extends BaseFragment implements DetailContract.View{
                 mPresenter.updateFavourite(mCurrentClipping,Clipping.K_CLIPPINGS_UN_FAVOURITE);
             }else{
                 mPresenter.updateFavourite(mCurrentClipping,Clipping.K_CLIPPINGS_FAVOURITE);
+            }
+        }
+        if(id == R.id.menu_hide){
+            if(mCurrentClipping.status == Clipping.K_CLIPPING_STATUS_NORMAL){
+                mPresenter.updateStatus(mCurrentClipping,Clipping.K_CLIPPING_STATUS_DELETED);
+            }else {
+                mPresenter.updateStatus(mCurrentClipping,Clipping.K_CLIPPING_STATUS_NORMAL);
             }
         }
     }

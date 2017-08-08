@@ -16,6 +16,7 @@
 
 package com.zql.android.clippings.device.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
@@ -23,6 +24,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+
+import com.zql.android.clippings.R;
 
 /**
  * @author qinglian.zhang, created on 2017/2/23.
@@ -38,28 +41,47 @@ public abstract class BaseActivity extends AppCompatActivity {
         initData();
     }
 
-    protected abstract @LayoutRes int getLayoutId();
+    protected abstract
+    @LayoutRes
+    int getLayoutId();
 
     protected abstract void initView();
 
     protected abstract void initData();
 
-    protected void addFragment(@IdRes int container, BaseFragment fragment){
-        getSupportFragmentManager().beginTransaction().add(container,fragment).commit();
+    protected void addFragment(@IdRes int container, BaseFragment fragment) {
+        getSupportFragmentManager().beginTransaction().add(container, fragment).commit();
     }
 
-    protected void showFragment(BaseFragment fragment){
+    protected void showFragment(BaseFragment fragment) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.show(fragment);
         ft.commit();
     }
 
-    protected void hideFragment(BaseFragment fragment){
+    protected void hideFragment(BaseFragment fragment) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.hide(fragment);
         ft.commit();
     }
 
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        doStartAnim();
+    }
+
+    private void doStartAnim() {
+        overridePendingTransition(R.anim.comm_right_in,
+                R.anim.comm_hold);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.comm_hold,
+                R.anim.comm_right_out);
+    }
 }

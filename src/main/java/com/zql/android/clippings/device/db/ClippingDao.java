@@ -38,7 +38,7 @@ public interface ClippingDao {
     @Query("SELECT * FROM clippings WHERE id = :id")
     Clipping getClippingById(int id);
 
-    @Query("SELECT * FROM clippings WHERE type != 0")
+    @Query("SELECT * FROM clippings WHERE type != 0 AND status = 1")
     List<Clipping> getAllClippings();
 
     @Query("SELECT md5 FROM clippings")

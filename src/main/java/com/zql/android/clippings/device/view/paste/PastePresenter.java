@@ -52,7 +52,7 @@ public class PastePresenter implements PasteContract.Presenter {
         if(count > 0 ){
             ClipData.Item item= clipData.getItemAt(0);
             final CharSequence text = item.getText();
-            if(text != null){
+            if(text != null && text.length()>0){
                 CheckPasteExist.RequestValues value = new CheckPasteExist.RequestValues();
 
                 value.pasteContent = new StringBuilder(text).toString();
