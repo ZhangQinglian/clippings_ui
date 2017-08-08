@@ -36,6 +36,8 @@ public class HomeContract implements IContract {
 
         void loadClippings(boolean isFavourite);
 
+        void loadHideClippings();
+
     }
 
     public interface View extends IView<Presenter>{

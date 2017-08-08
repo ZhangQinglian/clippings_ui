@@ -23,10 +23,13 @@
     <string name="menu_show">主页中显示</string>
 
     <string name="drawer_category_tools">小工具</string>
+    <string name="drawer_category_setting">设置</string>
     <string name="paste_title">粘贴板</string>
     <string name="paste_new_clip">发现可添加内容</string>
     <string name="paste_add_clip">添加到本页</string>
     <string name="paste_check">检测粘贴板</string>
     <string name="paste_copy_success">已复制到粘贴板</string>
     <string name="paste_delete_paste">是否删除 %1$s</string>
+
+    <string name="setting_hide">隐藏内容</string>
 </resources>

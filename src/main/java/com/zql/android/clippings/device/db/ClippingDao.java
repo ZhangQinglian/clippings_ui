@@ -72,6 +72,8 @@ public interface ClippingDao {
     int getLabelId(String md5,String label);
 
 
+    @Query("SELECT * FROM clippings WHERE status = 2")
+    List<Clipping> getAllHideClippings();
     ///////////////粘贴板管理////////////////////
     @Insert()
     long addPasteItem(PasteItem pasteItem);

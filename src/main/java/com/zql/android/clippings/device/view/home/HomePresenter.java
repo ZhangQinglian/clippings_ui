@@ -22,6 +22,7 @@ import android.os.Looper;
 import com.zql.android.clippings.bridge.mvpc.UseCase;
 import com.zql.android.clippings.bridge.mvpc.UseCaseHandler;
 import com.zql.android.clippings.usecase.GetAllClippings;
+import com.zql.android.clippings.usecase.GetAllHideClippings;
 
 /**
  * @author qinglian.zhang, created on 2017/2/23.
@@ -66,5 +67,20 @@ public class HomePresenter implements HomeContract.Presenter{
         });
 
 
+    }
+
+    @Override
+    public void loadHideClippings() {
+        UseCaseHandler.getInstance().execute(new GetAllHideClippings(), new GetAllHideClippings.RequestValues(), new UseCase.UseCaseCallback<GetAllHideClippings.ResponseValues>() {
+            @Override
+            public void onSuccess(GetAllHideClippings.ResponseValues response) {
+                mView.updateClippings(response.clippingList);
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
     }
 }

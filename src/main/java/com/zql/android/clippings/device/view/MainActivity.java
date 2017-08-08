@@ -43,6 +43,7 @@ import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 import com.zql.android.clippings.R;
 import com.zql.android.clippings.device.parser.ClippingsParser;
+import com.zql.android.clippings.device.view.hide.HideClippingsActivity;
 import com.zql.android.clippings.device.view.home.HomeContract;
 import com.zql.android.clippings.device.view.home.ClippingsFragment;
 import com.zql.android.clippings.device.view.home.HomePresenter;
@@ -232,6 +233,15 @@ public class MainActivity extends BaseActivity implements ClippingsParser.Callba
             public void onClick(View view) {
                 mDrawerLayout.closeDrawer(Gravity.LEFT);
                 Intent intent = new Intent(MainActivity.this, PasteActivity.class);
+                startActivity(intent);
+            }
+        });
+        TextView setting_hide = findViewById(R.id.setting_hide);
+        setting_hide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDrawerLayout.closeDrawer(Gravity.LEFT);
+                Intent intent = new Intent(MainActivity.this, HideClippingsActivity.class);
                 startActivity(intent);
             }
         });

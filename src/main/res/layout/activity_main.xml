@@ -90,6 +90,26 @@
                         android:paddingLeft="20dp"
                         android:drawablePadding="20dp"
                         android:drawableLeft="@drawable/ic_drawer_tools_paste"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/drawer_category_setting"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="13sp"
+                        android:gravity="left"
+                        android:paddingLeft="10dp"/>
+                    <TextView
+                        android:id="@+id/setting_hide"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:text="@string/setting_hide"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:gravity="center|left"
+                        android:paddingLeft="20dp"
+                        android:drawablePadding="20dp"
+                        android:drawableLeft="@drawable/ic_drawer_setting_hide"/>
                 </LinearLayout>
             </ScrollView>
         </FrameLayout>

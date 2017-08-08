@@ -57,6 +57,7 @@ import io.reactivex.functions.Consumer;
 public class ClippingsFragment extends BaseFragment implements HomeContract.View{
 
     public static final String ARG_TAG_FAVOURITE = "favourite";
+    public static final String ARG_TAG_HIDE = "hide";
 
     private final int kGridSpace = 8;
 
@@ -71,6 +72,8 @@ public class ClippingsFragment extends BaseFragment implements HomeContract.View
     private List<String> mMd5s ;
 
     private boolean mIsFavourite = false;
+
+    private boolean mIsHide = false;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +81,7 @@ public class ClippingsFragment extends BaseFragment implements HomeContract.View
         if(args != null){
             mMd5s = getArguments().getStringArrayList(TagFilterActivity.FILTER_MD5S);
             mIsFavourite = ARG_TAG_FAVOURITE.equals(getArguments().getString(ARG_TAG_FAVOURITE));
+            mIsHide = ARG_TAG_HIDE.equals(getArguments().getString(ARG_TAG_HIDE));
         }
     }
 
@@ -98,7 +102,11 @@ public class ClippingsFragment extends BaseFragment implements HomeContract.View
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.loadClippings(mIsFavourite);
+        if(mIsHide){
+            mPresenter.loadHideClippings();
+        }else {
+            mPresenter.loadClippings(mIsFavourite);
+        }
     }
 
     @Override
